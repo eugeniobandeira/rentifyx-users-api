@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.1" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>af993a40-b417-412f-8fb1-6f5c3c2c52fe</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <PackageReference Include="Aspire.Hosting.AppHost" />
+      <PackageReference Include="Scalar.AspNetCore" />
+      <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+  </ItemGroup>
+</Project>
