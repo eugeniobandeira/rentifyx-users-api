@@ -1,7 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <RootNamespace>Rentifyx_Clients.Application</RootNamespace>
-  </PropertyGroup>
-
-</Project>
