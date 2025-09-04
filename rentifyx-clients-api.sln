@@ -9,23 +9,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Api", "01 - Api", "{16
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Application", "02 - Application", "{3971FE76-FA05-4E2B-BFE8-E7BF64C475C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx-Clients.Application", "src\02 - Application\Rentifyx-Clients.Application\Rentifyx-Clients.Application.csproj", "{C83E624D-683B-4561-97BC-A7B3C1EFD552}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Clients.Application", "src\02 - Application\Rentifyx-Clients.Application\Rentifyx.Clients.Application.csproj", "{C83E624D-683B-4561-97BC-A7B3C1EFD552}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 - Domain", "03 - Domain", "{36928E95-15B1-4869-8359-E8FC5E4816A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx-Clients.Domain", "src\03 - Domain\Rentifyx-Clients.Domain\Rentifyx-Clients.Domain.csproj", "{B6EEF6BC-5681-4004-BDB6-5852BA918AC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Clients.Domain", "src\03 - Domain\Rentifyx-Clients.Domain\Rentifyx.Clients.Domain.csproj", "{B6EEF6BC-5681-4004-BDB6-5852BA918AC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 - Exception", "04 - Exception", "{CE351F44-D06C-4906-8C69-08E9E65B6FFB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05 - IoC", "05 - IoC", "{FF3F5261-0D71-4CCD-925B-D7A6AC900068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx-Clients.IoC", "src\05 - IoC\Rentifyx-Clients.IoC\Rentifyx-Clients.IoC.csproj", "{C410314C-69E4-4294-A814-25E3CFBD0F96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Clients.IoC", "src\05 - IoC\Rentifyx-Clients.IoC\Rentifyx.Clients.IoC.csproj", "{C410314C-69E4-4294-A814-25E3CFBD0F96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx-Clients.Exception", "src\04 - Exception\Rentifyx-Clients.Exception\Rentifyx-Clients.Exception.csproj", "{F0E59DB5-0EEF-4AE6-8211-8BB3138596EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Clients.Exception", "src\04 - Exception\Rentifyx-Clients.Exception\Rentifyx.Clients.Exception.csproj", "{F0E59DB5-0EEF-4AE6-8211-8BB3138596EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06 - Infrastructure", "06 - Infrastructure", "{3F196A7D-A22A-4DA3-8500-702AB0F1F398}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx-Clients.Infrastructure", "src\06 - Infrastructure\Rentifyx-Clients.Infrastructure\Rentifyx-Clients.Infrastructure.csproj", "{EF765024-BAC6-441D-8952-6B9AD3F83CDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Clients.Infrastructure", "src\06 - Infrastructure\Rentifyx-Clients.Infrastructure\Rentifyx.Clients.Infrastructure.csproj", "{EF765024-BAC6-441D-8952-6B9AD3F83CDA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iac", "iac", "{3A0B27ED-1A2A-4E01-9B59-086D9123DF7C}"
 EndProject
@@ -54,9 +54,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx-Clients.Api.AppHost", "src\01 - Api\Rentifyx-Clients.Api\Rentifyx-Clients.Api.AppHost\Rentifyx-Clients.Api.AppHost.csproj", "{46B4D73A-56CE-4095-AFB2-470605F82B3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentityx.Clients.ApiService", "src\01 - Api\Rentityx-Clients\Rentityx-Clients.ApiService\Rentityx.Clients.ApiService.csproj", "{B977999B-2E8C-13CE-F268-7DFB6283FEFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx-Clients.Api.ServiceDefaults", "src\01 - Api\Rentifyx-Clients.Api\Rentifyx-Clients.Api.ServiceDefaults\Rentifyx-Clients.Api.ServiceDefaults.csproj", "{10A07D2F-EECF-7167-6E7D-F65FC7F19AEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentityx.Clients.AppHost", "src\01 - Api\Rentityx-Clients\Rentityx-Clients.AppHost\Rentityx.Clients.AppHost.csproj", "{5E5ACBEC-41CD-9169-8878-2B3BC426E4FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentityx.Clients.ServiceDefaults", "src\01 - Api\Rentityx-Clients\Rentityx-Clients.ServiceDefaults\Rentityx.Clients.ServiceDefaults.csproj", "{7BF7A555-D877-4E6D-6713-3669AC4D909B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,14 +102,18 @@ Global
 		{D20C9864-0C70-42E0-B613-AF533949796A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D20C9864-0C70-42E0-B613-AF533949796A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D20C9864-0C70-42E0-B613-AF533949796A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46B4D73A-56CE-4095-AFB2-470605F82B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46B4D73A-56CE-4095-AFB2-470605F82B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46B4D73A-56CE-4095-AFB2-470605F82B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46B4D73A-56CE-4095-AFB2-470605F82B3C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10A07D2F-EECF-7167-6E7D-F65FC7F19AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10A07D2F-EECF-7167-6E7D-F65FC7F19AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10A07D2F-EECF-7167-6E7D-F65FC7F19AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10A07D2F-EECF-7167-6E7D-F65FC7F19AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B977999B-2E8C-13CE-F268-7DFB6283FEFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B977999B-2E8C-13CE-F268-7DFB6283FEFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B977999B-2E8C-13CE-F268-7DFB6283FEFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B977999B-2E8C-13CE-F268-7DFB6283FEFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E5ACBEC-41CD-9169-8878-2B3BC426E4FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E5ACBEC-41CD-9169-8878-2B3BC426E4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E5ACBEC-41CD-9169-8878-2B3BC426E4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E5ACBEC-41CD-9169-8878-2B3BC426E4FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BF7A555-D877-4E6D-6713-3669AC4D909B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BF7A555-D877-4E6D-6713-3669AC4D909B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BF7A555-D877-4E6D-6713-3669AC4D909B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BF7A555-D877-4E6D-6713-3669AC4D909B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,8 +138,9 @@ Global
 		{1535E58C-8CD7-4748-941A-E58DD76D97CF} = {4DB55BCD-A392-4E32-9E3B-CDE617095E17}
 		{7D0167E7-40FC-4A79-8EDE-272A70DA81FA} = {EC39CA9E-4DB6-4747-9504-C5930713912B}
 		{D20C9864-0C70-42E0-B613-AF533949796A} = {70647C6F-53DE-4C9B-886F-1433804A07BD}
-		{46B4D73A-56CE-4095-AFB2-470605F82B3C} = {164165F7-3E7A-4971-BAE5-0C94922F797B}
-		{10A07D2F-EECF-7167-6E7D-F65FC7F19AEE} = {164165F7-3E7A-4971-BAE5-0C94922F797B}
+		{B977999B-2E8C-13CE-F268-7DFB6283FEFF} = {164165F7-3E7A-4971-BAE5-0C94922F797B}
+		{5E5ACBEC-41CD-9169-8878-2B3BC426E4FB} = {164165F7-3E7A-4971-BAE5-0C94922F797B}
+		{7BF7A555-D877-4E6D-6713-3669AC4D909B} = {164165F7-3E7A-4971-BAE5-0C94922F797B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26DD9EA5-4F5E-4B91-97AC-DC6F1DAB598C}
