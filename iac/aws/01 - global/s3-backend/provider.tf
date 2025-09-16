@@ -6,19 +6,19 @@ terraform {
     }
   }
 
-  # Configure the backend for Terraform state
-  # backend "s3" {
-  #   bucket         = aws_s3_bucket.terraform_state.bucket
-  #   key            = "terraform.tfstate"
-  #   region         = "us-east-1"
-  #   dynamodb_table = aws_dynamodb_table.terraform_state_lock.name
-  #   encrypt        = true
-  # }
+  backend "s3" {
+    bucket         = "rentifyx-clients-tf-state-dev"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "rentifyx-clients-tf-lock-dev"
+    encrypt        = true
+    profile        = "terraform-user"
+  }
 }
 
 provider "aws" {
   region  = "us-east-1"
-  profile = "terraform-user" 
+  profile = "terraform-user"
 
   default_tags {
     tags = {

@@ -10,8 +10,20 @@ variable "project_name" {
   default     = "rentifyx"
 }
 
+variable "service_name" {
+  description = "The service name"
+  type        = string
+  default     = "clients"
+}
+
 variable "environment" {
   description = "The environment"
   type        = string
   default     = "dev"
+}
+
+variable "dynamodb_lock_table_name" {
+  description = "DynamoDB lock table name"
+  type        = string
+  default     = "tf-lock"
 }

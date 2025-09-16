@@ -1,7 +1,5 @@
-data "aws_caller_identity" "current" {}
-
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.project_name}-${var.environment}-tf-state-${data.aws_caller_identity.current.account_id}"
+  bucket = "${var.project_name}-${var.service_name}-tf-state-${var.environment}"
 
   lifecycle {
     prevent_destroy = true
@@ -29,7 +27,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" 
 }
 
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name         = "rentifyx-tf-lock-table"
+  name         = "${var.project_name}-${var.service_name}-${var.dynamodb_lock_table_name}-${var.environment}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
