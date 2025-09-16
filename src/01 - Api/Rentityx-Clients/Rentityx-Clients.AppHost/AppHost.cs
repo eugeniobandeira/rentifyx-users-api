@@ -8,4 +8,7 @@ builder.AddProject<Projects.Rentityx_Clients_ApiService>("apiservice")
     .WithScalar()
     .WithReDoc();
 
-builder.Build().Run();
+await builder
+    .Build()
+    .RunAsync()
+    .ConfigureAwait(false);

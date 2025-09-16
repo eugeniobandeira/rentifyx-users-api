@@ -15,7 +15,7 @@ internal static class ResourceBuilderExtensions
         return builder.WithCommand(
             name,
             displayName,
-            executeCommand: async _ =>
+            executeCommand: _ => 
             {
                 try
                 {
@@ -25,11 +25,15 @@ internal static class ResourceBuilderExtensions
 
                     Process.Start((new ProcessStartInfo(url) { UseShellExecute = true }));
 
-                    return new ExecuteCommandResult { Success = true };
+                    return Task.FromResult(new ExecuteCommandResult { Success = true });
                 }
-                catch (Exception ex)
+                catch (InvalidOperationException ex)
                 {
-                    return new ExecuteCommandResult { Success = false, ErrorMessage = ex.ToString() };
+                    return Task.FromResult(new ExecuteCommandResult
+                    {
+                        Success = false,
+                        ErrorMessage = "Invalid operation: " + ex.Message
+                    });
                 }
             },
             updateState: context =>

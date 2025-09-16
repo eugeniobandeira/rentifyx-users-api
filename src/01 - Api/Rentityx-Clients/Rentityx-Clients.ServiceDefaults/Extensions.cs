@@ -27,18 +27,16 @@ public static class Extensions
 
         builder.Services.ConfigureHttpClientDefaults(http =>
         {
-            // Turn on resilience by default
             http.AddStandardResilienceHandler();
 
-            // Turn on service discovery by default
             http.AddServiceDiscovery();
         });
 
         // Uncomment the following to restrict the allowed schemes for service discovery.
-        // builder.Services.Configure<ServiceDiscoveryOptions>(options =>
-        // {
-        //     options.AllowedSchemes = ["https"];
-        // });
+        //builder.Services.Configure<ServiceDiscoveryOptions>(options =>
+        //{
+        //    options.AllowedSchemes = ["https"];
+        //});
 
         return builder;
     }
@@ -64,8 +62,8 @@ public static class Extensions
                     .AddAspNetCoreInstrumentation(tracing =>
                         // Exclude health check requests from tracing
                         tracing.Filter = context =>
-                            !context.Request.Path.StartsWithSegments(HealthEndpointPath, StringComparison.CurrentCultureIgnoreCase)
-                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath, StringComparison.CurrentCultureIgnoreCase)
+                            !context.Request.Path.StartsWithSegments(HealthEndpointPath, StringComparison.CurrentCultureIgnoreCase)  && 
+                            !context.Request.Path.StartsWithSegments(AlivenessEndpointPath, StringComparison.CurrentCultureIgnoreCase)
                     )
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
