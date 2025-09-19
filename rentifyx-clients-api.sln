@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11012.119 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -35,7 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - CommomTestUtilities", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Validators", "02 - Validators", "{4DB55BCD-A392-4E32-9E3B-CDE617095E17}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 - UseCases", "03 - UseCases", "{EC39CA9E-4DB6-4747-9504-C5930713912B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 - Handlers", "03 - Handlers", "{EC39CA9E-4DB6-4747-9504-C5930713912B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 - Integration", "04 - Integration", "{70647C6F-53DE-4C9B-886F-1433804A07BD}"
 EndProject

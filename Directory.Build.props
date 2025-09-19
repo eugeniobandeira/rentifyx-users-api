@@ -8,6 +8,7 @@
       <TreatWarningAsErrors>true</TreatWarningAsErrors>
       <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
       <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+      <CodeAnalysisRemoveUnnecessaryImports>true</CodeAnalysisRemoveUnnecessaryImports>
   </PropertyGroup>
 
     <!--Works for all projects in the solution except for Docker Compose projects-->
