@@ -6,9 +6,7 @@ using System.Security.Cryptography;
 
 namespace CommomTestUtilities.Request;
 
-#pragma warning disable CA1515 // Consider making public types internal
 public static class ClientBuilder
-#pragma warning restore CA1515 // Consider making public types internal
 {
     public static ClientEntity Build()
     {
