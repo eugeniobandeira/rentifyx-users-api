@@ -2,7 +2,7 @@
 
 namespace Rentifyx.Clients.Application.Features.Clients.Request;
 
-public record CreateClientRequest(
+public record CreateClientRequestDto(
     string Document,
     string Name, 
     string Email);
