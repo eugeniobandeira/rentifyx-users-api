@@ -9,6 +9,7 @@
       <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
       <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
       <CodeAnalysisRemoveUnnecessaryImports>true</CodeAnalysisRemoveUnnecessaryImports>
+      <NoWarn>$(NoWarn);CA1515;CA1000;CA1707;CA2007;CA1868</NoWarn>
   </PropertyGroup>
 
     <!--Works for all projects in the solution except for Docker Compose projects-->
