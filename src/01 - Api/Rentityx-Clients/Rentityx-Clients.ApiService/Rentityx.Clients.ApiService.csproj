@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    
-  <ItemGroup>
-    <ProjectReference Include="..\Rentityx-Clients.ServiceDefaults\Rentityx.Clients.ServiceDefaults.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Redoc.AspNetCore" />
     <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rentityx-Clients.ServiceDefaults\Rentityx.Clients.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

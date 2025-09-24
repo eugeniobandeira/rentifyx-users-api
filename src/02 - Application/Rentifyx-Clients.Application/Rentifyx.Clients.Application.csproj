@@ -1,17 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>Rentifyx_Clients.Application</RootNamespace>
+    <RootNamespace>Rentifyx.Clients.Application</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\" />
     <Folder Include="Commom\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\03 - Domain\Rentifyx-Clients.Domain\Rentifyx.Clients.Domain.csproj" />
+    <ProjectReference Include="..\..\04 - Exception\Rentifyx-Clients.Exception\Rentifyx.Clients.Exceptions.csproj" />
   </ItemGroup>
 
 </Project>
