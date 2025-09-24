@@ -146,7 +146,7 @@
     <comment>O email pode ter no máximo 100  caracteres.</comment>
   </data>
   <data name="DOCUMENT_LENGTH" xml:space="preserve">
-    <value>Document must be 11 or 14 digits</value>
+    <value>Document must be 11 or 14 digits.</value>
     <comment>O documento precisa ter o tamanho de 11 ou 14 digitos.</comment>
   </data>
 </root>

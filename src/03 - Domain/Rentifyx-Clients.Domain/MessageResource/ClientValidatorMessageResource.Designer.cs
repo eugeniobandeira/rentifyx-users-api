@@ -61,7 +61,7 @@ namespace Rentifyx.Clients.Domain.MessageResource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Document must be 11 or 14 digits.
+        ///   Looks up a localized string similar to Document must be 11 or 14 digits..
         /// </summary>
         public static string DOCUMENT_LENGTH {
             get {
