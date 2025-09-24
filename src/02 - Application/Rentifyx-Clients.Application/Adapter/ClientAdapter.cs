@@ -5,7 +5,7 @@ namespace Rentifyx.Clients.Application.Adapter;
 
 public static class ClientAdapter
 {
-    public static ClientEntity FromRequestToEntity(CreateClientRequest request)
+    public static ClientEntity FromRequestToEntity(CreateClientRequestDto request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
