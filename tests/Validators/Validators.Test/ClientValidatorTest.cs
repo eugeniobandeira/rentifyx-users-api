@@ -9,12 +9,12 @@ namespace Validators.Test;
 public class ClientValidatorTest
 {
     [Fact]
-    public void ShouldBeValidWhenClientIsValid()
+    public void Should_Be_Valid_When_Client_Is_Valid()
     {
         // Arrange
         var client = ClientBuilder.Build();
 
-        var request = new CreateClientRequest(
+        var request = new CreateClientRequestDto(
             client.Document,
             client.Name,
             client.Email);
@@ -32,12 +32,12 @@ public class ClientValidatorTest
     [Theory]
     [InlineData("")]
     [InlineData("      ")]
-    public void ShouldBeInvalidWhenClientDocumentIsNull(string document)
+    public void Should_Be_Invalid_When_Client_Document_Is_WhiteSpace(string document)
     {
         // Arrange
         var client = ClientBuilder.Build();
 
-        var request = new CreateClientRequest(
+        var request = new CreateClientRequestDto(
             document,
             client.Name,
             client.Email);
@@ -63,12 +63,12 @@ public class ClientValidatorTest
     [InlineData("1234567891")]
     [InlineData("12345678912345678")]
     [InlineData("123")]
-    public void ShouldBeInvalidWhenClientDocumentHasInvalidLength(string document)
+    public void Should_Be_Invalid_When_Client_Document_Has_Invalid_Length(string document)
     {
         // Arrange
         var client = ClientBuilder.Build();
 
-        var request = new CreateClientRequest(
+        var request = new CreateClientRequestDto(
             document,
             client.Name,
             client.Email);
@@ -91,12 +91,12 @@ public class ClientValidatorTest
     [Theory]
     [InlineData("")]
     [InlineData("      ")]
-    public void ShouldBeInvalidWhenClientNameIsNull(string name)
+    public void Should_Be_Invalid_When_Client_Name_Is_WhiteSpace(string name)
     {
         // Arrange
         var client = ClientBuilder.Build();
 
-        var request = new CreateClientRequest(
+        var request = new CreateClientRequestDto(
             client.Document,
             name,
             client.Email);
@@ -119,14 +119,15 @@ public class ClientValidatorTest
     }
 
     [Fact]
-    public void ShouldBeInvalidWhenClientNameIsMoreThan100Digits()
+    public void Should_Be_Invalid_When_Client_Name_Is_More_Than_100_Characters()
     {
         // Arrange
         var client = ClientBuilder.Build();
+        string invalidLengthName = "fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name";
 
-        var request = new CreateClientRequest(
+        var request = new CreateClientRequestDto(
             client.Document,
-            "fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name fake name",
+            invalidLengthName,
             client.Email);
 
         var validator = new CreateClientValidator();
@@ -147,12 +148,12 @@ public class ClientValidatorTest
     [Theory]
     [InlineData("")]
     [InlineData("      ")]
-    public void ShouldBeInvalidWhenClientEmailIsNull(string email)
+    public void Should_Be_Invalid_When_Client_Email_Is_WhiteSpace(string email)
     {
         // Arrange
         var client = ClientBuilder.Build();
 
-        var request = new CreateClientRequest(
+        var request = new CreateClientRequestDto(
             client.Document,
             client.Name,
             email);
@@ -175,12 +176,12 @@ public class ClientValidatorTest
     }
 
     [Fact]
-    public void ShouldBeInvalidWhenClientEmailIsNotValid()
+    public void Should_Be_Invalid_When_Client_Email_Is_Not_Valid()
     {
         // Arrange
         var client = ClientBuilder.Build();
 
-        var request = new CreateClientRequest(
+        var request = new CreateClientRequestDto(
             client.Document,
             client.Name,
             "test.com.br");
