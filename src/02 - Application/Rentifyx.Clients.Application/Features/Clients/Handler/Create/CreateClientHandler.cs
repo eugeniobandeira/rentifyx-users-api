@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Rentifyx.Clients.Application.Adapter;
-using Rentifyx.Clients.Application.Features.Clients.Request;
+using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Request;
+using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Validator;
 using Rentifyx.Clients.Domain.Entities;
 using Rentifyx.Clients.Domain.Interfaces.Client;
 using Rentifyx.Clients.Exceptions.ExceptionBase;
@@ -22,7 +23,7 @@ public sealed class CreateClientHandler(
 
         var dto = ClientAdapter.FromRequestToEntity(request);
 
-        await _writeOnlyRepository.AddAsync(dto, cancellationToken);
+        await _writeOnlyRepository.PutItemAsync(dto, cancellationToken);
 
         return dto;
     }

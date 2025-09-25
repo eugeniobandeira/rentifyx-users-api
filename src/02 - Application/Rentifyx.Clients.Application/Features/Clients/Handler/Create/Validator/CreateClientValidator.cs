@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Rentifyx.Clients.Application.Features.Clients.Request;
-using Rentifyx.Clients.Domain.MessageResource;
+using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Request;
+using Rentifyx.Clients.Exceptions.MessageResource;
 
-namespace Rentifyx.Clients.Application.Features.Clients.Handler.Create;
+namespace Rentifyx.Clients.Application.Features.Clients.Handler.Create.Validator;
 
 public sealed class CreateClientValidator : AbstractValidator<CreateClientRequestDto>
 {
@@ -15,23 +15,23 @@ public sealed class CreateClientValidator : AbstractValidator<CreateClientReques
     {
         RuleFor(x => x.Document.Trim())
             .NotEmpty()
-            .WithMessage(ClientValidatorMessageResource.EMPTY_DOCUMENT)
+            .WithMessage(ClientValidatorErrorMessageResource.EMPTY_DOCUMENT)
             .Must(IsDocumentValid)
-            .WithMessage(ClientValidatorMessageResource.DOCUMENT_LENGTH);
+            .WithMessage(ClientValidatorErrorMessageResource.DOCUMENT_LENGTH);
 
         RuleFor(x => x.Name.Trim())
             .NotEmpty()
-            .WithMessage(ClientValidatorMessageResource.EMPTY_NAME)
+            .WithMessage(ClientValidatorErrorMessageResource.EMPTY_NAME)
             .MinimumLength(MinNameLength)
-            .WithMessage(ClientValidatorMessageResource.NAME_MIN_LENGTH)
+            .WithMessage(ClientValidatorErrorMessageResource.NAME_MIN_LENGTH)
             .MaximumLength(MaxNameLength)
-            .WithMessage(ClientValidatorMessageResource.NAME_MAX_LENGTH);
+            .WithMessage(ClientValidatorErrorMessageResource.NAME_MAX_LENGTH);
 
         RuleFor(x => x.Email.Trim())
             .NotEmpty()
-            .WithMessage(ClientValidatorMessageResource.EMPTY_EMAIL)
+            .WithMessage(ClientValidatorErrorMessageResource.EMPTY_EMAIL)
             .EmailAddress()
-            .WithMessage(ClientValidatorMessageResource.INVALID_EMAIL_ADDRESS);
+            .WithMessage(ClientValidatorErrorMessageResource.INVALID_EMAIL_ADDRESS);
     }
 
     private static bool IsDocumentValid(string document)

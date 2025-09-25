@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\03 - Domain\Rentifyx-Clients.Domain\Rentifyx.Clients.Domain.csproj" />
-    <ProjectReference Include="..\..\04 - Exception\Rentifyx-Clients.Exception\Rentifyx.Clients.Exceptions.csproj" />
+    <ProjectReference Include="..\..\03 - Domain\Rentifyx.Clients.Domain\Rentifyx.Clients.Domain.csproj" />
+    <ProjectReference Include="..\..\04 - Exception\Rentifyx.Clients.Exception\Rentifyx.Clients.Exceptions.csproj" />
   </ItemGroup>
 
 </Project>

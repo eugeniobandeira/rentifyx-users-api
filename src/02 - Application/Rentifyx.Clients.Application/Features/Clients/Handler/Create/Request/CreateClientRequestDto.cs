@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Rentifyx.Clients.Application.Features.Clients.Request;
+namespace Rentifyx.Clients.Application.Features.Clients.Handler.Create.Request;
 
 public record CreateClientRequestDto(
     string Document,
