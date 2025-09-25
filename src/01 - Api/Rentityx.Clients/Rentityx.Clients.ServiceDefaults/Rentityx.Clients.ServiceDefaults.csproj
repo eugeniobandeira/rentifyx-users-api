@@ -17,4 +17,8 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\05 - IoC\Rentifyx.Clients.IoC\Rentifyx.Clients.IoC.csproj" />
+  </ItemGroup>
+
 </Project>

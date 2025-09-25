@@ -8,7 +8,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rentityx-Clients.ServiceDefaults\Rentityx.Clients.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Rentityx.Clients.ServiceDefaults\Rentityx.Clients.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

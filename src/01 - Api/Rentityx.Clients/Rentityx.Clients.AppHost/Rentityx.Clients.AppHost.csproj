@@ -8,11 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rentityx-Clients.ApiService\Rentityx.Clients.ApiService.csproj" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <ProjectReference Include="..\Rentityx.Clients.ApiService\Rentityx.Clients.ApiService.csproj" />
   </ItemGroup>
 
 </Project>

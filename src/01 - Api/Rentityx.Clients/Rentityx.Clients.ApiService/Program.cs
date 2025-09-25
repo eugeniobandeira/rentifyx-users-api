@@ -1,19 +1,20 @@
+using Rentityx.Clients.ApiService.Extensions;
+using Rentityx.Clients.ServiceDefaults;
 using Scalar.AspNetCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 
-// Add services to the container.
 builder.Services.AddProblemDetails();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
@@ -23,11 +24,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "OpenAPI V1");
+        options.RoutePrefix = "swagger";
     });
 
     app.UseReDoc(options =>
     {
-        options.SpecUrl("openapi/v1.json");
+        options.SpecUrl("/openapi/v1.json");
+        options.RoutePrefix = "api-docs";
     });
 
     app.MapScalarApiReference();
@@ -35,4 +38,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapDefaultEndpoints();
 
-app.Run();
+app.MapEndpoints();
+
+await app.RunAsync();
