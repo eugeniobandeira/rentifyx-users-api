@@ -27,3 +27,9 @@ variable "dynamodb_lock_table_name" {
   type        = string
   default     = "tf-lock"
 }
+
+variable "dynamodb_clients_table_name" {
+  description = "DynamoDB clients table name"
+  type        = string
+  default     = "rentifyx-clients"
+}

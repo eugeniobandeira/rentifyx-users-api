@@ -40,3 +40,10 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
     Name = "Terraform State Locking"
   }
 }
+
+module "clients_dynamodb" {
+  source = "../../modules/dynamodb"
+
+  dynamodb_clients_table_name = var.dynamodb_clients_table_name
+  environment                 = var.environment
+}
