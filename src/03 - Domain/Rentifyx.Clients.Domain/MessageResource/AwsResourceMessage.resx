@@ -117,36 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NAME_MIN_LENGTH" xml:space="preserve">
-    <value>Document must be at least 7 characters long.</value>
-    <comment>O documento precisa ter ao menos 7 caracteres.</comment>
-  </data>
-  <data name="EMPTY_DOCUMENT" xml:space="preserve">
-    <value>Document is required.</value>
-    <comment>O documento é obrigatório.</comment>
-  </data>
-  <data name="EMPTY_NAME" xml:space="preserve">
-    <value>Name is required.</value>
-    <comment>O nome é obrigatório.</comment>
-  </data>
-  <data name="NAME_MAX_LENGTH" xml:space="preserve">
-    <value>Name must be at most 30 characters long.</value>
-    <comment>O nome deve ter no máximo 30  caracteres.</comment>
-  </data>
-  <data name="EMPTY_EMAIL" xml:space="preserve">
-    <value>Email is required.</value>
-    <comment>O email é obrigatório.</comment>
-  </data>
-  <data name="INVALID_EMAIL_ADDRESS" xml:space="preserve">
-    <value>Email must be a valid email address.</value>
-    <comment>O email precisa ser válido.</comment>
-  </data>
-  <data name="INVALID_EMAIL_LENGTH" xml:space="preserve">
-    <value>Email must be at most 100 characters long.</value>
-    <comment>O email pode ter no máximo 100  caracteres.</comment>
-  </data>
-  <data name="DOCUMENT_LENGTH" xml:space="preserve">
-    <value>Document must be 11 or 14 digits.</value>
-    <comment>O documento precisa ter o tamanho de 11 ou 14 digitos.</comment>
+  <data name="CLIENTS_TABLE" xml:space="preserve">
+    <value>rentifyx-clients</value>
   </data>
 </root>
