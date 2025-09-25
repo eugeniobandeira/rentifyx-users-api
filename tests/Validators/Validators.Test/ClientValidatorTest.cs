@@ -1,8 +1,9 @@
 ﻿using CommomTestUtilities.Request;
 using FluentAssertions;
 using Rentifyx.Clients.Application.Features.Clients.Handler.Create;
-using Rentifyx.Clients.Application.Features.Clients.Request;
-using Rentifyx.Clients.Domain.MessageResource;
+using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Request;
+using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Validator;
+using Rentifyx.Clients.Exceptions.MessageResource;
 
 namespace Validators.Test;
 
@@ -53,8 +54,8 @@ public class ClientValidatorTest
         var errorMessages = result.Errors.Select(error => error.ErrorMessage).ToList();
         var totalErrors = 2;
 
-        errorMessages.Should().Contain(ClientValidatorMessageResource.EMPTY_DOCUMENT);
-        errorMessages.Should().Contain(ClientValidatorMessageResource.DOCUMENT_LENGTH);
+        errorMessages.Should().Contain(ClientValidatorErrorMessageResource.EMPTY_DOCUMENT);
+        errorMessages.Should().Contain(ClientValidatorErrorMessageResource.DOCUMENT_LENGTH);
 
         result.Errors.Should().HaveCount(totalErrors);
     }
@@ -85,7 +86,7 @@ public class ClientValidatorTest
             .Should()
             .ContainSingle()
             .And
-            .Contain(error => error.ErrorMessage == ClientValidatorMessageResource.DOCUMENT_LENGTH);
+            .Contain(error => error.ErrorMessage == ClientValidatorErrorMessageResource.DOCUMENT_LENGTH);
     }
 
     [Theory]
@@ -112,8 +113,8 @@ public class ClientValidatorTest
         var errorMessages = result.Errors.Select(error => error.ErrorMessage).ToList();
         var totalErrors = 2;
 
-        errorMessages.Should().Contain(ClientValidatorMessageResource.EMPTY_NAME);
-        errorMessages.Should().Contain(ClientValidatorMessageResource.NAME_MIN_LENGTH);
+        errorMessages.Should().Contain(ClientValidatorErrorMessageResource.EMPTY_NAME);
+        errorMessages.Should().Contain(ClientValidatorErrorMessageResource.NAME_MIN_LENGTH);
 
         result.Errors.Should().HaveCount(totalErrors);
     }
@@ -142,7 +143,7 @@ public class ClientValidatorTest
             .Should()
             .ContainSingle()
             .And
-            .Contain(error => error.ErrorMessage == ClientValidatorMessageResource.NAME_MAX_LENGTH);
+            .Contain(error => error.ErrorMessage == ClientValidatorErrorMessageResource.NAME_MAX_LENGTH);
     }
 
     [Theory]
@@ -169,8 +170,8 @@ public class ClientValidatorTest
         var errorMessages = result.Errors.Select(error => error.ErrorMessage).ToList();
         var totalErrors = 2;
 
-        errorMessages.Should().Contain(ClientValidatorMessageResource.EMPTY_EMAIL);
-        errorMessages.Should().Contain(ClientValidatorMessageResource.INVALID_EMAIL_ADDRESS);
+        errorMessages.Should().Contain(ClientValidatorErrorMessageResource.EMPTY_EMAIL);
+        errorMessages.Should().Contain(ClientValidatorErrorMessageResource.INVALID_EMAIL_ADDRESS);
 
         result.Errors.Should().HaveCount(totalErrors);
     }
@@ -198,7 +199,7 @@ public class ClientValidatorTest
             .Should()
             .ContainSingle()
             .And
-            .Contain(error => error.ErrorMessage == ClientValidatorMessageResource.INVALID_EMAIL_ADDRESS);
+            .Contain(error => error.ErrorMessage == ClientValidatorErrorMessageResource.INVALID_EMAIL_ADDRESS);
     }
 
 }

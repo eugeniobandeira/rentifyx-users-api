@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\02 - Application\Rentifyx-Clients.Application\Rentifyx.Clients.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\02 - Application\Rentifyx.Clients.Application\Rentifyx.Clients.Application.csproj" />
     <ProjectReference Include="..\..\CommomTestUtilities\CommomTestUtilities\CommomTestUtilities.csproj" />
   </ItemGroup>
 
