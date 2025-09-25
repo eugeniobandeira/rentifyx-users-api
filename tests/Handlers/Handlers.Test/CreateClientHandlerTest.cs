@@ -1,12 +1,10 @@
-﻿using CommomTestUtilities.Logger;
-using CommomTestUtilities.Repository;
+﻿using CommomTestUtilities.Repository;
 using CommomTestUtilities.Request;
 using FluentAssertions;
 using Rentifyx.Clients.Application.Features.Clients.Handler.Create;
-using Rentifyx.Clients.Application.Features.Clients.Request;
-using Rentifyx.Clients.Domain.Interfaces.Client;
-using Rentifyx.Clients.Domain.MessageResource;
+using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Request;
 using Rentifyx.Clients.Exceptions.ExceptionBase;
+using Rentifyx.Clients.Exceptions.MessageResource;
 
 namespace Handlers.Test;
 
@@ -56,7 +54,7 @@ public class CreateClientHandlerTest
 
         result.Where(error 
             => error.GetErrors().Count == 1
-            && error.GetErrors().Contains(ClientValidatorMessageResource.DOCUMENT_LENGTH));
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.DOCUMENT_LENGTH));
     }
 
     [Fact]
@@ -80,8 +78,8 @@ public class CreateClientHandlerTest
 
         result.Where(error
             => error.GetErrors().Count == 2
-            && error.GetErrors().Contains(ClientValidatorMessageResource.EMPTY_DOCUMENT)
-            && error.GetErrors().Contains(ClientValidatorMessageResource.DOCUMENT_LENGTH));
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.EMPTY_DOCUMENT)
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.DOCUMENT_LENGTH));
     }
 
     [Fact]
@@ -105,8 +103,8 @@ public class CreateClientHandlerTest
 
         result.Where(error
             => error.GetErrors().Count == 2
-            && error.GetErrors().Contains(ClientValidatorMessageResource.EMPTY_NAME)
-            && error.GetErrors().Contains(ClientValidatorMessageResource.NAME_MIN_LENGTH));
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.EMPTY_NAME)
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.NAME_MIN_LENGTH));
     }
 
     [Fact]
@@ -130,7 +128,7 @@ public class CreateClientHandlerTest
 
         result.Where(error
             => error.GetErrors().Count == 1
-            && error.GetErrors().Contains(ClientValidatorMessageResource.NAME_MIN_LENGTH));
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.NAME_MIN_LENGTH));
     }
 
     [Fact]
@@ -155,7 +153,7 @@ public class CreateClientHandlerTest
 
         result.Where(error
             => error.GetErrors().Count == 1
-            && error.GetErrors().Contains(ClientValidatorMessageResource.NAME_MAX_LENGTH));
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.NAME_MAX_LENGTH));
     }
 
     [Fact]
@@ -179,8 +177,8 @@ public class CreateClientHandlerTest
 
         result.Where(error
             => error.GetErrors().Count == 2
-            && error.GetErrors().Contains(ClientValidatorMessageResource.EMPTY_EMAIL)
-            && error.GetErrors().Contains(ClientValidatorMessageResource.INVALID_EMAIL_ADDRESS));
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.EMPTY_EMAIL)
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.INVALID_EMAIL_ADDRESS));
     }
 
     [Fact]
@@ -204,7 +202,7 @@ public class CreateClientHandlerTest
 
         result.Where(error
             => error.GetErrors().Count == 1
-            && error.GetErrors().Contains(ClientValidatorMessageResource.INVALID_EMAIL_ADDRESS));
+            && error.GetErrors().Contains(ClientValidatorErrorMessageResource.INVALID_EMAIL_ADDRESS));
     }
 
     private static CreateClientHandler CreateHandler()
