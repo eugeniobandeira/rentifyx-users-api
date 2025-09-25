@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using Bogus.Extensions.Brazil;
 using Rentifyx.Clients.Domain.Entities;
-using System;
 using System.Security.Cryptography;
 
 namespace CommomTestUtilities.Request;

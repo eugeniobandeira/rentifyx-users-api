@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\03 - Domain\Rentifyx-Clients.Domain\Rentifyx.Clients.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\03 - Domain\Rentifyx.Clients.Domain\Rentifyx.Clients.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
