@@ -19,7 +19,7 @@ public sealed class ClientRepository : IClientWriteOnlyRepository
         _tableName = tableName;
     }
 
-    public async Task<bool> PutItemAsync(ClientEntity clientEntity, CancellationToken cancellationToken = default)
+    public async Task<bool> AddAsync(ClientEntity clientEntity, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(clientEntity);
 

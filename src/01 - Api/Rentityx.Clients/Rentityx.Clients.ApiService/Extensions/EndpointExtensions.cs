@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
-using Rentityx.Clients.ApiService.Endpoints;
+using Rentityx.Clients.ApiService.Abstract;
 using System.Reflection;
 
 namespace Rentityx.Clients.ApiService.Extensions;
@@ -10,12 +10,11 @@ public static class EndpointExtensions
     {
         ArgumentNullException.ThrowIfNull(assembly);
 
-        ServiceDescriptor[] serviceDescriptors = assembly
+        ServiceDescriptor[] serviceDescriptors = [.. assembly
             .DefinedTypes
             .Where(type => type is { IsAbstract: false, IsInterface: false } &&
                            type.IsAssignableTo(typeof(IEndpoint)))
-            .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type))
-            .ToArray();
+            .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type))];
 
         services.TryAddEnumerable(serviceDescriptors);
 

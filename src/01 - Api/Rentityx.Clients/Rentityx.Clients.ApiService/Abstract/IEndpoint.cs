@@ -1,4 +1,4 @@
-﻿namespace Rentityx.Clients.ApiService.Endpoints;
+﻿namespace Rentityx.Clients.ApiService.Abstract;
 
 public interface IEndpoint
 {

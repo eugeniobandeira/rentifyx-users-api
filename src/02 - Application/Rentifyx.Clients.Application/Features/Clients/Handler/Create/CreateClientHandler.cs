@@ -1,44 +1,46 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ErrorOr;
+using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Rentifyx.Clients.Application.Adapter;
 using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Request;
 using Rentifyx.Clients.Application.Features.Clients.Handler.Create.Validator;
 using Rentifyx.Clients.Domain.Entities;
 using Rentifyx.Clients.Domain.Interfaces.Client;
+using Rentifyx.Clients.Domain.Shared.Results;
 using Rentifyx.Clients.Exceptions.ExceptionBase;
 using System.Text.Json;
 
 namespace Rentifyx.Clients.Application.Features.Clients.Handler.Create;
 
 public sealed class CreateClientHandler(
+    IValidator<CreateClientRequestDto> validator,
     IClientWriteOnlyRepository writeOnlyRepository) 
     : ICreateClientHandler
 {
     private readonly IClientWriteOnlyRepository _writeOnlyRepository = writeOnlyRepository;
+    private readonly IValidator<CreateClientRequestDto> _validator = validator;
 
-    public async Task<ClientEntity> RegisterClientAsync(
+    public async Task<ErrorOr<ClientEntity>> RegisterClientAsync(
         CreateClientRequestDto request, 
         CancellationToken cancellationToken = default)
     {
-        Validate(request);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var dto = ClientAdapter.FromRequestToEntity(request);
-
-        await _writeOnlyRepository.PutItemAsync(dto, cancellationToken);
-
-        return dto;
-    }
-
-    private static void Validate(CreateClientRequestDto request)
-    {
-        var validator = new CreateClientValidator().Validate(request);
-
-        if (!validator.IsValid)
+        if (!validationResult.IsValid)
         {
-            var errors = validator.Errors
-                .Select(error => error.ErrorMessage)
-                .ToList().AsReadOnly();
+            var errors = validationResult.Errors
+                .ConvertAll(error => Error.Validation(
+                    code: error.PropertyName,
+                    description: error.ErrorMessage));
 
-            throw new ErrorOnValidationException(errors);
+            return errors;
         }
+            
+
+        var client = ClientAdapter.FromRequestToEntity(request);
+
+        await _writeOnlyRepository.AddAsync(client, cancellationToken);
+
+        return client;
     }
 }

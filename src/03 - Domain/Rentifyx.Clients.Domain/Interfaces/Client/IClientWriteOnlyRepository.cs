@@ -4,5 +4,5 @@ namespace Rentifyx.Clients.Domain.Interfaces.Client;
 
 public interface IClientWriteOnlyRepository
 {
-    Task<bool> PutItemAsync(ClientEntity clientEntity, CancellationToken cancellationToken = default);
+    Task<bool> AddAsync(ClientEntity clientEntity, CancellationToken cancellationToken = default);
 }
