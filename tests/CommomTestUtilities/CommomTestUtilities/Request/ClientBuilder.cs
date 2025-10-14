@@ -1,15 +1,15 @@
 ﻿using Bogus;
 using Bogus.Extensions.Brazil;
-using Rentifyx.Clients.Domain.Entities;
+using Rentifyx.Users.Domain.Entities;
 using System.Security.Cryptography;
 
 namespace CommomTestUtilities.Request;
 
 public static class ClientBuilder
 {
-    public static ClientEntity Build()
+    public static UserEntity Build()
     {
-        return new Faker<ClientEntity>("pt_BR")
+        return new Faker<UserEntity>("pt_BR")
             .RuleFor(c => c.Document, f =>
             {
                 var randomNumber = RandomNumberGenerator.GetInt32(0, 2);

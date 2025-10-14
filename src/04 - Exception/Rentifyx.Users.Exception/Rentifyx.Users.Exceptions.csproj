@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Rentifyx.Users.Exceptions</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="MessageResource\UserValidatorErrorMessageResource.Designer.cs">
+      <DependentUpon>UserValidatorErrorMessageResource.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="MessageResource\UserValidatorErrorMessageResource.resx">
+      <LastGenOutput>UserValidatorErrorMessageResource.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

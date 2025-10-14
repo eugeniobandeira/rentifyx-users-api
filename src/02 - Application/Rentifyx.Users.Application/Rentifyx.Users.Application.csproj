@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Rentifyx.Users.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ErrorOr" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\03 - Domain\Rentifyx.Users.Domain\Rentifyx.Users.Domain.csproj" />
+    <ProjectReference Include="..\..\04 - Exception\Rentifyx.Users.Exception\Rentifyx.Users.Exceptions.csproj" />
+  </ItemGroup>
+
+</Project>
