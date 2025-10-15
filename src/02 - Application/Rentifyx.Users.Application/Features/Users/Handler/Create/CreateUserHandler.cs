@@ -47,9 +47,7 @@ public sealed class CreateUserHandler(
             _logger.LogError("Client creation failed due to validation errors: {Errors}", errors);
 
             return errors;
-        }
-            
-
+        }   
         var user = UserAdapter.FromRequestToEntity(request);
 
         await _addOnlyRepository.AddAsync(user, tableName, cancellationToken);
