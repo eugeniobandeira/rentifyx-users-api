@@ -2,7 +2,7 @@ name: "🛠️ CI - Build and Quality"
 
 on:
   workflow_dispatch: 
-  
+
   push:
     branches: [main]
   pull_request:
@@ -40,14 +40,28 @@ jobs:
       - name: "🏗️ Build"
         run: dotnet build --configuration Release --no-restore
 
-      - name: "🧪 Run tests"
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: "🧪 Run tests with coverage"
+        run: |
+          dotnet test \
+            --configuration Release \
+            --no-build \
+            --verbosity normal \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./coverage \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
 
       - name: "🔍 SonarCloud Analysis"
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: |
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.projectName=rentifyx-users-api
+            -Dsonar.coverage.exclusions=**/Test/**/*,**/Migrations/**/*
+            -Dsonar.cs.vscoveragexml.reportsPaths=coverage/**/coverage.cobertura.xml
 
       - name: "✅ All checks passed!"
         if: success()
