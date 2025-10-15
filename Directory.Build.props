@@ -1,17 +1,22 @@
 <Project>
-  <PropertyGroup>
-      <TargetFramework>net9.0</TargetFramework>
-      <Nullable>enable</Nullable>
-      <ImplicitUsings>enable</ImplicitUsings>
-      <AnalysisLevel>latest</AnalysisLevel>
-      <AnalysisMode>All</AnalysisMode>
-      <TreatWarningAsErrors>true</TreatWarningAsErrors>
-      <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-      <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-      <CodeAnalysisRemoveUnnecessaryImports>true</CodeAnalysisRemoveUnnecessaryImports>
-      <NeutralResourcesLanguage>en</NeutralResourcesLanguage>
-      <NoWarn>$(NoWarn);CA1515;CA1000;CA1707;CA2007;CA1868;CA1062,CA1848</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>All</AnalysisMode>
+        <TreatWarningAsErrors>true</TreatWarningAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <CodeAnalysisRemoveUnnecessaryImports>true</CodeAnalysisRemoveUnnecessaryImports>
+        <NoWarn>$(NoWarn);CA1515;CA1000;CA1707;CA2007;CA1868;CA1062,CA1848,CA1824</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Resources.NeutralResourcesLanguageAttribute">
+            <_Parameter1>en</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
 
     <!--Works for all projects in the solution except for Docker Compose projects-->
     <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj'">
@@ -19,5 +24,5 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup> 
+    </ItemGroup>
 </Project>
