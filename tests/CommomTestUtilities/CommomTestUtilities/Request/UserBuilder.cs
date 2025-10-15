@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace CommomTestUtilities.Request;
 
-public static class ClientBuilder
+public static class UserBuilder
 {
     public static UserEntity Build()
     {

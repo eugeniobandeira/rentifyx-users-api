@@ -4,11 +4,17 @@ using Rentifyx.Users.Domain.Interfaces.User;
 
 namespace CommomTestUtilities.Repository;
 
-public static class UserWriteOnlyRepositoryBuilder
+public static class UserAddOnlyRepositoryBuilder
 {
     public static IAddOnlyRepository<UserEntity> Build()
     {
         var mock = new Mock<IAddOnlyRepository<UserEntity>>();
+
+        mock.Setup(repo => repo.AddAsync(
+                It.IsAny<UserEntity>(), 
+                It.IsAny<string>(), 
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
         return mock.Object;
     }
