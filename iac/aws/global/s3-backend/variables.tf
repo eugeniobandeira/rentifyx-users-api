@@ -1,9 +1,3 @@
-variable "aws_account_id" {
-  description = "The AWS Account ID"
-  type        = string
-  default     = "480831398199"
-}
-
 variable "project_name" {
   description = "The project name"
   type        = string
@@ -13,7 +7,7 @@ variable "project_name" {
 variable "service_name" {
   description = "The service name"
   type        = string
-  default     = "clients"
+  default     = "users"
 }
 
 variable "environment" {
@@ -28,8 +22,8 @@ variable "dynamodb_lock_table_name" {
   default     = "tf-lock"
 }
 
-variable "dynamodb_clients_table_name" {
-  description = "DynamoDB clients table name"
+variable "dynamodb_users_table_name" {
+  description = "DynamoDB users table name"
   type        = string
-  default     = "rentifyx-clients"
+  default     = "rentifyx-users"
 }

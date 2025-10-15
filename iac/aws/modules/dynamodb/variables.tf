@@ -1,7 +1,7 @@
-variable "dynamodb_clients_table_name" {
-  description = "DynamoDB clients table name"
+variable "dynamodb_users_table_name" {
+  description = "DynamoDB users table name"
   type        = string
-  default     = "rentifyx-clients"
+  default     = "rentifyx-users"
 }
 
 variable "environment" {

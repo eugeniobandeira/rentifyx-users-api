@@ -1,7 +1,7 @@
 module "dynamodb_table" {
   source   = "terraform-aws-modules/dynamodb-table/aws"
 
-  name     = "${var.dynamodb_clients_table_name}-${var.environment}"
+  name     = "${var.dynamodb_users_table_name}-${var.environment}"
   hash_key = "Document"
   billing_mode = "PAY_PER_REQUEST"
 

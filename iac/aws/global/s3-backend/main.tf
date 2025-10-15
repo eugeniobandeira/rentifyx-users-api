@@ -41,9 +41,9 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
   }
 }
 
-module "clients_dynamodb" {
+module "users_dynamodb" {
   source = "../../modules/dynamodb"
 
-  dynamodb_clients_table_name = var.dynamodb_clients_table_name
-  environment                 = var.environment
+  dynamodb_users_table_name = var.dynamodb_users_table_name
+  environment               = var.environment
 }
