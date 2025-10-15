@@ -9,6 +9,7 @@
       <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
       <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
       <CodeAnalysisRemoveUnnecessaryImports>true</CodeAnalysisRemoveUnnecessaryImports>
+      <NeutralResourcesLanguage>en</NeutralResourcesLanguage>
       <NoWarn>$(NoWarn);CA1515;CA1000;CA1707;CA2007;CA1868;CA1062,CA1848</NoWarn>
   </PropertyGroup>
 
