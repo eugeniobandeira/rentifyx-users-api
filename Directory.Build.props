@@ -9,7 +9,7 @@
         <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <CodeAnalysisRemoveUnnecessaryImports>true</CodeAnalysisRemoveUnnecessaryImports>
-        <NoWarn>$(NoWarn);CA1515;CA1000;CA1707;CA2007;CA1868;CA1062,CA1848,CA1824</NoWarn>
+        <NoWarn>$(NoWarn);CA1515;CA1000;CA1707;CA2007;CA1868;CA1062,CA1848,CA1824,CA1812</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
