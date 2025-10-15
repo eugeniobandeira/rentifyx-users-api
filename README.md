@@ -1,10 +1,10 @@
-# RentifyX - Clients Registration Service
+# RentifyX - Users Registration Service
 
 A core service of the RentifyX property rental platform, responsible for robust and scalable customer (tenant) registration. Built with modern .NET and cloud-native principles.
 
 ## 🚀 Key Features
 
-- **Clients Onboarding:** Secure registration flow with data validation, email verification, and initial profile setup.
+- **Users Onboarding:** Secure registration flow with data validation, email verification, and initial profile setup.
 - **Email Integration:** Sends welcome and account verification emails via Amazon SES upon successful registration.
 - **Data Persistence:** Stores customer data in a highly available and scalable DynamoDB table.
 - **Document Storage:** Utilizes Amazon S3 for secure storage of customer-uploaded documents (e.g., identity verification).
@@ -27,8 +27,8 @@ A core service of the RentifyX property rental platform, responsible for robust 
 
 | Method     | Endpoint              | Description                        | Auth     |
 | :--------- | :-------------------- | :--------------------------------- | :------- |
-| **POST**   | `v1/api/clients`      | Registers a new customer.          | None     |
-| **GET**    | `v1/api/clients`      | Gets a list of customer's profile. | Required |
-| **GET**    | `v1/api/clients/{id}` | Gets a customer's profile.         | Required |
-| **UPDATE** | `v1/api/clients/{id}` | Updates a customer's profile.      | Required |
-| **DELETE** | `v1/api/clients/{id}` | Deletes a customer's profile.      | Required |
+| **POST**   | `v1/api/users`      | Registers a new customer.          | None     |
+| **GET**    | `v1/api/users`      | Gets a list of customer's profile. | Required |
+| **GET**    | `v1/api/users/{id}` | Gets a customer's profile.         | Required |
+| **UPDATE** | `v1/api/users/{id}` | Updates a customer's profile.      | Required |
+| **DELETE** | `v1/api/users/{id}` | Deletes a customer's profile.      | Required |
