@@ -1,0 +1,44 @@
+name: CI - Build and Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  DOTNET_VERSION: "9.x"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "📥 Checkout code"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "⚙️ Setup .NET"
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: "📦 Restore dependencies"
+        run: dotnet restore
+
+      - name: "🏗️ Build"
+        run: dotnet build --configuration Release --no-restore
+
+      - name: "🧪 Run tests"
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      - name: "🔍 SonarCloud Analysis"
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: "✅ All checks passed!"
+        if: success()
+        run: echo "🎉 Code quality validation completed successfully!"
