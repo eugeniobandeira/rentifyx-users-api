@@ -23,8 +23,7 @@ jobs:
           dotnet-version: "9.x"
 
       - name: "📦 Install SonarScanner for .NET"
-        run: |
-          dotnet tool install --global dotnet-sonarscanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
       - name: "🔍 Build and Analyze"
         env:
@@ -34,7 +33,9 @@ jobs:
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
             /d:sonar.token="$SONAR_TOKEN" \
-            /d:sonar.host.url="https://sonarcloud.io"
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.cs.vscoveragexml.reportsPaths="**/TestResults/**/coverage.cobertura.xml" \
+            /d:sonar.coverage.exclusions="**/Test/**/*"
           
           dotnet restore
           dotnet build --configuration Release --no-restore
