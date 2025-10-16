@@ -29,7 +29,7 @@ public sealed class CreateUserHandler(
 
         if (string.IsNullOrEmpty(tableName))
         {
-            throw new InvalidOperationException("AWS Tables Users configuration is missing.");
+            throw new InvalidOperationException("AWS Tables Users configuration is missing");
         }
 
         _logger.LogInformation("Starting client creation process. Request: {Request}", request);
