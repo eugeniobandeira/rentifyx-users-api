@@ -28,7 +28,7 @@ A core service of the RentifyX property rental platform, responsible for robust 
 | Method     | Endpoint              | Description                        | Auth     |
 | :--------- | :-------------------- | :--------------------------------- | :------- |
 | **POST**   | `v1/api/users`      | Registers a new user.          | None     |
-| **GET**    | `v1/api/users`      | Gets a list of user's profile. | Required |
+| **GET**    | `v1/api/users`      | Gets a list of users profile. | Required |
 | **GET**    | `v1/api/users/{id}` | Gets a user's profile.         | Required |
 | **UPDATE** | `v1/api/users/{id}` | Updates a user profile.      | Required |
 | **DELETE** | `v1/api/users/{id}` | Deletes a user profile.      | Required |
