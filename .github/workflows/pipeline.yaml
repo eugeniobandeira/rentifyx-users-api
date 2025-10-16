@@ -1,19 +1,15 @@
-name: "🛠️ CI - Build and Quality"
-
+name: Test Code Coverage
 on:
-  workflow_dispatch: 
   push:
     branches: [main]
   pull_request:
-    branches: [main]
-
-env:
-  DOTNET_VERSION: "9.x"
+    types: [opened, synchronize, reopened]
 
 jobs:
-  validate:
+  test-coverage:
+    name: Test Coverage
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: "📥 Checkout code"
         uses: actions/checkout@v4
@@ -23,15 +19,7 @@ jobs:
       - name: "⚙️ Setup .NET"
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: "💾 Cache dependencies"
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+          dotnet-version: "9.x"
 
       - name: "📦 Restore dependencies"
         run: dotnet restore
@@ -39,32 +27,23 @@ jobs:
       - name: "🏗️ Build"
         run: dotnet build --configuration Release --no-restore
 
-      - name: "🧪 Run tests with coverage"
+      - name: "🧪 Generate coverage report"
         run: |
           dotnet test \
             --configuration Release \
             --no-build \
-            --verbosity normal \
             --collect:"XPlat Code Coverage" \
             --results-directory ./coverage \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
 
-      - name: "🔍 SonarCloud Analysis"
+      - name: "🔍 Send to SonarCloud"
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         with:
           args: |
-            -Dsonar.scm.provider=git
-            -Dsonar.analysis.detectedci=github-actions
-            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
-            -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
-            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
-            -Dsonar.pullrequest.github.repository=${{ github.repository }}
-
-      - name: "✅ All checks passed!"
-        if: success()
-        run: echo "🎉 Code quality validation completed successfully!"
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.coverage.exclusions=**/Test/**/*,**/Migrations/**/*
+            -Dsonar.cs.vscoveragexml.reportsPaths=coverage/**/coverage.cobertura.xml
