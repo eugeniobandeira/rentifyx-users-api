@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate:
-    name: "✅ Validation & Analysis"
+    name: "Validation & Analysis"
     runs-on: ubuntu-latest
     
     steps:
@@ -45,4 +45,4 @@ jobs:
           args: |
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.cs.coverlet.reportsPaths=**/coverage.cobertura.xml
+            -Dsonar.cs.coverlet.reportsPaths=**/TestResults/**/coverage.cobertura.xml
