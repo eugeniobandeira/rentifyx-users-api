@@ -2,7 +2,6 @@ name: "🛠️ CI - Build and Quality"
 
 on:
   workflow_dispatch: 
-
   push:
     branches: [main]
   pull_request:
@@ -55,13 +54,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         with:
           args: |
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.projectName=rentifyx-users-api
-            -Dsonar.coverage.exclusions=**/Test/**/*,**/Migrations/**/*
-            -Dsonar.cs.vscoveragexml.reportsPaths=coverage/**/coverage.cobertura.xml
+            -Dsonar.scm.provider=git
+            -Dsonar.analysis.detectedci=github-actions
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
+            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+            -Dsonar.pullrequest.github.repository=${{ github.repository }}
 
       - name: "✅ All checks passed!"
         if: success()
