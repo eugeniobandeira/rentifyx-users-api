@@ -2,7 +2,6 @@ name: "🛠️ CI - Build and Quality"
 
 on:
   workflow_dispatch: 
-
   push:
     branches: [main]
   pull_request:
@@ -61,6 +60,10 @@ jobs:
           args: |
             -Dsonar.scm.provider=git
             -Dsonar.analysis.detectedci=github-actions
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
+            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+            -Dsonar.pullrequest.github.repository=${{ github.repository }}
 
       - name: "✅ All checks passed!"
         if: success()
