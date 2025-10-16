@@ -55,13 +55,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         with:
           args: |
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.projectName=rentifyx-users-api
-            -Dsonar.coverage.exclusions=**/Test/**/*,**/Migrations/**/*
-            -Dsonar.cs.vscoveragexml.reportsPaths=coverage/**/coverage.cobertura.xml
+            -Dsonar.scm.provider=git
+            -Dsonar.analysis.detectedci=github-actions
 
       - name: "✅ All checks passed!"
         if: success()
