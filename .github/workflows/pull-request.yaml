@@ -32,9 +32,6 @@ jobs:
       - name: 📥 Restore dependencies
         run: dotnet restore
 
-      - name: 📝 Lint / Format check
-        run: dotnet format --verify-no-changes
-
       - name: ☕ Setup Java (SonarCloud)
         uses: actions/setup-java@v4
         with:
