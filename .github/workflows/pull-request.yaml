@@ -52,7 +52,7 @@ jobs:
           /o:"$env:SONAR_ORGANIZATION"
           /d:sonar.token="$env:SONAR_TOKEN"
           /d:sonar.verbose=true
-          /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.cobertura.xml"
+          /d:sonar.cs.opencover.reportsPaths="**/*.cobertura.xml"
 
       - name: 🛠 Build
         run: dotnet build --no-incremental --configuration Release
