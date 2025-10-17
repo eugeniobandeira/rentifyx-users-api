@@ -41,42 +41,24 @@ jobs:
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests with Coverage (FIXED)
+      - name: ✅ Run Tests with Coverage (COVERLET MSBUILD)
         run: |
-          echo "🧪 Running tests with coverage..."
+          echo "🧪 Running tests with coverlet.msbuild..."
           rm -rf TestResults
+          rm -rf coverage
           
           dotnet test \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./coverage/ \
+            /p:CoverletOutputFormat=cobertura \
+            /p:Include="[Rentifyx.Users.*]*" \
             --configuration Release \
             --no-build \
-            --logger "trx;LogFileName=testresults.trx" \
-            --collect:"XPlat Code Coverage" \
-            --results-directory TestResults \
-            --settings coverlet.runsettings
+            --logger "trx;LogFileName=testresults.trx"
 
-      - name: 🔍 Verify Coverage Files
+      - name: 🛠️ CONVERT COVERAGE FORMAT
         run: |
-          echo "🔍 Checking generated coverage files..."
-          COVERAGE_FILES=$(find . -name "*.cobertura.xml" -type f)
-          
-          if [ -z "$COVERAGE_FILES" ]; then
-            echo "❌ No coverage files found!"
-            exit 1
-          fi
-          
-          echo "📄 Files found:"
-          echo "$COVERAGE_FILES"
-          
-          echo "📋 Checking file format..."
-          for file in $COVERAGE_FILES; do
-            echo "--- $file (first 5 lines) ---"
-            head -5 "$file"
-            echo ""
-          done
-
-      - name: 🛠️ CONVERT COVERAGE FORMAT (SOLUÇÃO DEFINITIVA)
-        run: |
-          echo "🛠️ Converting coverage format from Cobertura to Visual Studio..."
+          echo "🛠️ Converting coverage format..."
           
           COVERAGE_FILES=$(find . -name "coverage.cobertura.xml" -type f)
           
