@@ -48,13 +48,14 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: 🕵️‍♂️ SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5
         with:
-          organization: '<SUA_ORGANIZATION>'
-          projectKey: '<SEU_PROJECT_KEY>'
-          projectName: '<SEU_PROJECT_NAME>'
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          args: >
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.cs.vscoveragexml.reportsPaths="**/coverage.cobertura.xml"
+            -Dsonar.verbose=true
 
   release:
     runs-on: ubuntu-latest
