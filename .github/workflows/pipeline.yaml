@@ -41,36 +41,37 @@ jobs:
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests with Coverage
+      - name: ✅ Run Tests with Coverage (FIXED)
         run: |
-          echo "🧪 Executando testes com cobertura..."
-          mkdir -p TestResults
-          
-          find . -name "coverage.cobertura.xml" -delete
+          echo "🧪 Running tests with coverage..."
+          rm -rf TestResults
           
           dotnet test \
             --configuration Release \
-            --collect:"XPlat Code Coverage" \
-            --results-directory TestResults \
+            --no-build \
             --logger "trx;LogFileName=testresults.trx" \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=cobertura \
+            /p:CoverletOutput="./TestResults/" \
+            /p:Exclude="[*Tests*]*" \
+            /p:ExcludeByFile="**/Migrations/*.cs"
 
       - name: 🔍 Verify Coverage Files
         run: |
-          echo "🔍 Verificando arquivos de cobertura gerados..."
-          COVERAGE_FILES=$(find . -name "coverage.cobertura.xml" -type f)
+          echo "🔍 Checking generated coverage files..."
+          COVERAGE_FILES=$(find . -name "*.cobertura.xml" -type f)
           
           if [ -z "$COVERAGE_FILES" ]; then
-            echo "❌ Nenhum arquivo de cobertura encontrado!"
+            echo "❌ No coverage files found!"
             exit 1
           fi
           
-          echo "📄 Arquivos encontrados:"
+          echo "📄 Files found:"
           echo "$COVERAGE_FILES"
           
-          echo "📋 Verificando formato dos arquivos..."
+          echo "📋 Checking file format..."
           for file in $COVERAGE_FILES; do
-            echo "--- $file (primeiras 5 linhas) ---"
+            echo "--- $file (first 5 lines) ---"
             head -5 "$file"
             echo ""
           done
@@ -79,7 +80,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          echo "🏁 Finalizando análise SonarCloud..."
+          echo "🏁 Finalizing SonarCloud analysis..."
           dotnet-sonarscanner end
 
       - name: 📊 Upload Coverage Files for Debug
@@ -87,5 +88,5 @@ jobs:
         with:
           name: coverage-files
           path: |
-            **/coverage.cobertura.xml
+            **/*.cobertura.xml
           retention-days: 7
