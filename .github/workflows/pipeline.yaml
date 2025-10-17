@@ -11,23 +11,23 @@ jobs:
   build-test-sonar:
     runs-on: ubuntu-latest
     steps:
-      - name: 🔄 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: ⚙️ Setup .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
 
-      - name: 📦 Install SonarScanner for .NET
+      - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: dotnet restore
 
-      - name: 🕵️‍♂️ Begin SonarCloud analysis 
+      - name: Begin SonarCloud analysis 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -38,28 +38,25 @@ jobs:
             /d:sonar.coverage.exclusions="**Tests*.cs,**/obj/**" \
             /d:sonar.verbose=true
 
-      - name: 🛠 Build
+      - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests with Coverage
+      - name: Run Tests with Coverage
         run: |
-          echo "🧪 Running tests with coverage..."
-          
           rm -rf TestResults
           rm -rf coverage
           
           dotnet test \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./coverage/ \
+            /p:CoverletOutputFormat=cobertura \
+            /p:Include="[Rentifyx.Users.*]*" \
             --configuration Release \
             --no-build \
-            --collect:"XPlat Code Coverage" \
-            --results-directory TestResults \
-            --logger "trx;LogFileName=testresults.trx" \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+            --logger "trx;LogFileName=testresults.trx"
 
-      - name: 🔄 Organizar Arquivos de Cobertura
+      - name: Organize Coverage Files
         run: |
-          echo "🔄 Organizing coverage files..."
-          
           mkdir -p coverage
           
           find . -name "coverage.cobertura.xml" -type f | while read file; do
@@ -67,23 +64,15 @@ jobs:
               base_name=$(basename "$(dirname "$(dirname "$file")")")
               new_name="coverage/coverage_${base_name}.cobertura.xml"
               cp "$file" "$new_name"
-              echo "✅ Copied: $file → $new_name"
-            else
-              echo "⚠️  Empty file skipped: $file"
             fi
           done
-          
-          echo "📊 Final coverage files:"
-          ls -la coverage/ 2>/dev/null || echo "No coverage files found"
 
-      - name: 🏁 End SonarCloud analysis
+      - name: End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          echo "🏁 Finalizing SonarCloud analysis..."
-          dotnet-sonarscanner end
+        run: dotnet-sonarscanner end
 
-      - name: 📊 Upload Coverage Files for Debug
+      - name: Upload Coverage Files for Debug
         if: always()
         uses: actions/upload-artifact@v4
         with:
