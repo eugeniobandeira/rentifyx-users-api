@@ -24,6 +24,9 @@ jobs:
       - name: 📦 Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
+      - name: 📦 Install ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
       - name: 📦 Install dependencies
         run: dotnet restore
 
@@ -34,25 +37,40 @@ jobs:
           dotnet-sonarscanner begin \
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.vscoveragexml.reportsPaths="TestResults/coverage.cobertura.xml" \
+            /d:sonar.cs.vscoveragexml.reportsPaths="coverage-report/coverage.cobertura.xml" \
+            /d:sonar.coverage.exclusions="**Tests*.cs" \
             /d:sonar.verbose=true
 
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests and Generate Single Coverage Report
+      - name: ✅ Run Tests with Coverage
         run: |
-          dotnet test --no-build --configuration Release \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=cobertura \
-            /p:CoverletOutput=./TestResults/coverage.cobertura.xml \
-            /p:MergeWith='./TestResults/coverage.cobertura.xml'
+          mkdir -p TestResults
+          
+          dotnet test \
+            --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --results-directory TestResults \
+            --logger "trx;LogFileName=testresults.trx" \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+
+      - name: 🔄 Merge Coverage Reports
+        run: |
+          find . -name "coverage.cobertura.xml" -type f
+          
+          reportgenerator \
+            -reports:"**/coverage.cobertura.xml" \
+            -targetdir:"coverage-report" \
+            -reporttypes:"Cobertura" \
+            -verbosity:Info
+          
+          ls -la coverage-report/
 
       - name: 🏁 End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+        run: dotnet-sonarscanner end
 
       - name: 📊 Publish Test Results
         if: always()
@@ -60,3 +78,10 @@ jobs:
         with:
           name: test-results
           path: TestResults/**
+
+      - name: 📊 Publish Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage-report/
