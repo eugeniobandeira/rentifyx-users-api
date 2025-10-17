@@ -1,33 +1,27 @@
 ﻿name: Pipeline
-
 on:
   push:
     branches:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
   build-test-sonar:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: 🔄 Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Setup .NET
+      - name: ⚙️ Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
-
-      - name: Install SonarScanner for .NET
+      - name: 📦 Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
-
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: dotnet restore
-
-      - name: Begin SonarCloud analysis 
+      - name: 🕵️‍♂️ Begin SonarCloud analysis 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -37,12 +31,11 @@ jobs:
             /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.cobertura.xml" \
             /d:sonar.coverage.exclusions="**Tests*.cs,**/obj/**" \
             /d:sonar.verbose=true
-
-      - name: Build
+      - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
-
-      - name: Run Tests with Coverage
+      - name: ✅ Run Tests with Coverage (COVERLET MSBUILD)
         run: |
+          echo "🧪 Running tests with coverlet.msbuild..."
           rm -rf TestResults
           rm -rf coverage
           
@@ -54,30 +47,49 @@ jobs:
             --configuration Release \
             --no-build \
             --logger "trx;LogFileName=testresults.trx"
-
-      - name: Organize Coverage Files
+      - name: 🛠️ CONVERT COVERAGE FORMAT
         run: |
-          mkdir -p coverage
+          echo "🛠️ Converting coverage format..."
           
-          find . -name "coverage.cobertura.xml" -type f | while read file; do
-            if [ -s "$file" ]; then
-              base_name=$(basename "$(dirname "$(dirname "$file")")")
-              new_name="coverage/coverage_${base_name}.cobertura.xml"
-              cp "$file" "$new_name"
+          COVERAGE_FILES=$(find . -name "coverage.cobertura.xml" -type f)
+          
+          for file in $COVERAGE_FILES; do
+            echo "📝 Converting: $file"
+            
+            if [ ! -s "$file" ]; then
+              echo "⚠️  File is empty, skipping: $file"
+              continue
+            fi
+            
+            temp_file="${file}.converted"
+            
+            sed 's/^<coverage\s*/<results /; s/^<\/coverage>/<\/results>/' "$file" > "$temp_file"
+            
+            if grep -q "<results" "$temp_file"; then
+              mv "$temp_file" "$file"
+              echo "✅ Successfully converted: $file"
+            else
+              echo "❌ Failed to convert: $file"
+              rm -f "$temp_file"
             fi
           done
-
-      - name: End SonarCloud analysis
+          
+          echo "🔍 Verifying conversion..."
+          for file in $COVERAGE_FILES; do
+            echo "--- $file (first 3 lines after conversion) ---"
+            head -3 "$file"
+            echo ""
+          done
+      - name: 🏁 End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner end
-
-      - name: Upload Coverage Files for Debug
-        if: always()
+        run: |
+          echo "🏁 Finalizing SonarCloud analysis..."
+          dotnet-sonarscanner end
+      - name: 📊 Upload Coverage Files for Debug
         uses: actions/upload-artifact@v4
         with:
           name: coverage-files
           path: |
-            **/TestResults/**
-            coverage/
+            **/*.cobertura.xml
           retention-days: 7
