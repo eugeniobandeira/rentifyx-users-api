@@ -24,9 +24,6 @@ jobs:
       - name: 📦 Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: 📦 Install ReportGenerator
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
       - name: 📦 Install dependencies
         run: dotnet restore
 
@@ -37,125 +34,73 @@ jobs:
           dotnet-sonarscanner begin \
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
-            /d:sonar.cs.vscoveragexml.reportsPaths="coverage-report/coverage.cobertura.xml" \
-            /d:sonar.coverage.exclusions="**Tests*.cs" \
+            /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.cobertura.xml" \
+            /d:sonar.coverage.exclusions="**Tests*.cs,**/obj/**" \
             /d:sonar.verbose=true
 
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests with Coverage
+      - name: ✅ Run Tests with Coverage (COVERLET MSBUILD)
         run: |
-          echo "🧪 Iniciando execução de testes com cobertura..."
-          mkdir -p TestResults
+          echo "🧪 Running tests with coverlet.msbuild..."
+          rm -rf TestResults
+          rm -rf coverage
           
           dotnet test \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./coverage/ \
+            /p:CoverletOutputFormat=cobertura \
+            /p:Include="[Rentifyx.Users.*]*" \
             --configuration Release \
-            --collect:"XPlat Code Coverage" \
-            --results-directory TestResults \
-            --logger "trx;LogFileName=testresults.trx" \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
-          
-          echo "✅ Testes executados com sucesso!"
+            --no-build \
+            --logger "trx;LogFileName=testresults.trx"
 
-      - name: 🔍 Find Coverage Files
+      - name: 🛠️ CONVERT COVERAGE FORMAT
         run: |
-          echo "🔎 Procurando arquivos de cobertura..."
+          echo "🛠️ Converting coverage format..."
+          
           COVERAGE_FILES=$(find . -name "coverage.cobertura.xml" -type f)
           
-          if [ -z "$COVERAGE_FILES" ]; then
-            echo "❌ ERRO CRÍTICO: Nenhum arquivo de cobertura encontrado!"
-            echo "📁 Estrutura de diretórios:"
-            find . -name "*coverage*" -type d
-            exit 1
-          fi
+          for file in $COVERAGE_FILES; do
+            echo "📝 Converting: $file"
+            
+            if [ ! -s "$file" ]; then
+              echo "⚠️  File is empty, skipping: $file"
+              continue
+            fi
+            
+            temp_file="${file}.converted"
+            
+            sed 's/^<coverage\s*/<results /; s/^<\/coverage>/<\/results>/' "$file" > "$temp_file"
+            
+            if grep -q "<results" "$temp_file"; then
+              mv "$temp_file" "$file"
+              echo "✅ Successfully converted: $file"
+            else
+              echo "❌ Failed to convert: $file"
+              rm -f "$temp_file"
+            fi
+          done
           
-          echo "📄 Arquivos de cobertura encontrados:"
-          echo "$COVERAGE_FILES"
-          echo "📊 Total de arquivos: $(echo "$COVERAGE_FILES" | wc -l)"
-
-      - name: 🔄 Merge Coverage Reports
-        run: |
-          echo "🔄 Consolidando relatórios de cobertura..."
-          mkdir -p coverage-report
-          
-          reportgenerator \
-            -reports:"**/coverage.cobertura.xml" \
-            -targetdir:"coverage-report" \
-            -reporttypes:"Cobertura" \
-            -verbosity:Info
-          
-          echo "📁 Conteúdo do coverage-report:"
-          ls -la coverage-report/
-          
-          if [ -f "coverage-report/Cobertura.xml" ]; then
-            echo "✏️ Renomeando Cobertura.xml para coverage.cobertura.xml"
-            mv coverage-report/Cobertura.xml coverage-report/coverage.cobertura.xml
-            echo "✅ Arquivo renomeado com sucesso!"
-          else
-            echo "❌ ERRO: Arquivo Cobertura.xml não encontrado!"
-            exit 1
-          fi
-
-      - name: ✅ Verify Final Coverage File
-        run: |
-          echo "🔍 Verificando arquivo final de cobertura..."
-          
-          if [ ! -f "coverage-report/coverage.cobertura.xml" ]; then
-            echo "❌ ERRO CRÍTICO: Arquivo coverage.cobertura.xml não encontrado!"
-            echo "📁 Conteúdo do diretório:"
-            ls -la coverage-report/
-            exit 1
-          fi
-          
-          FILE_SIZE=$(wc -c < "coverage-report/coverage.cobertura.xml")
-          FILE_LINES=$(wc -l < "coverage-report/coverage.cobertura.xml")
-          
-          echo "📊 Estatísticas do arquivo:"
-          echo "   Tamanho: $FILE_SIZE bytes"
-          echo "   Linhas: $FILE_LINES"
-          
-          if [ "$FILE_SIZE" -lt 100 ]; then
-            echo "⚠️  AVISO: Arquivo de cobertura muito pequeno, pode estar vazio"
-          fi
-          
-          echo "✅ Arquivo de cobertura verificado com sucesso!"
+          echo "🔍 Verifying conversion..."
+          for file in $COVERAGE_FILES; do
+            echo "--- $file (first 3 lines after conversion) ---"
+            head -3 "$file"
+            echo ""
+          done
 
       - name: 🏁 End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          echo "🏁 Finalizando análise do SonarCloud..."
+          echo "🏁 Finalizing SonarCloud analysis..."
           dotnet-sonarscanner end
-          echo "✅ Análise do SonarCloud finalizada com sucesso!"
 
-      - name: 📊 Publish Test Results
-        if: always()
+      - name: 📊 Upload Coverage Files for Debug
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: TestResults/**
-
-      - name: 📊 Publish Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage-report/
-          
-      - name: 🎉 Success Notification
-        if: success()
-        run: |
-          echo "🎉 PIPELINE EXECUTADO COM SUCESSO!"
-          echo "📈 Cobertura de código enviada para o SonarCloud"
-          echo "🔗 Verifique o dashboard: https://sonarcloud.io"
-
-      - name: ⚠️ Failure Notification
-        if: failure()
-        run: |
-          echo "❌ PIPELINE FALHOU!"
-          echo "🔍 Verifique os logs acima para identificar o problema"
-          echo "📋 Possíveis causas:"
-          echo "   - Arquivo de cobertura não gerado"
-          echo "   - Problemas de conexão com SonarCloud"
-          echo "   - Falha nos testes"
+          name: coverage-files
+          path: |
+            **/*.cobertura.xml
+          retention-days: 7
