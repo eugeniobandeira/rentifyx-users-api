@@ -45,8 +45,8 @@ jobs:
         run: |
           dotnet test --no-build --configuration Release \
             --collect:"XPlat Code Coverage" \
-            --results-directory TestResults \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+            --results-directory TestResults/ \
+            --settings coverlet.runsettings
 
       - name: 🏁 End SonarCloud analysis
         env:
