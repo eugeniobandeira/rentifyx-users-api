@@ -41,54 +41,49 @@ jobs:
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests with Coverage (COVERLET MSBUILD)
+      - name: ✅ Run Tests with Coverage (MÉTODO SIMPLIFICADO)
         run: |
-          echo "🧪 Running tests with coverlet.msbuild..."
+          echo "🧪 Running tests with coverage..."
+          
           rm -rf TestResults
           rm -rf coverage
           
           dotnet test \
-            /p:CollectCoverage=true \
-            /p:CoverletOutput=./coverage/ \
-            /p:CoverletOutputFormat=cobertura \
-            /p:Include="[Rentifyx.Users.*]*" \
             --configuration Release \
             --no-build \
-            --logger "trx;LogFileName=testresults.trx"
+            --collect:"XPlat Code Coverage" \
+            --results-directory TestResults \
+            --logger "trx;LogFileName=testresults.trx" \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
 
-      - name: 🛠️ CONVERT COVERAGE FORMAT
+      - name: 🔄 Renomear e Organizar Arquivos de Cobertura
         run: |
-          echo "🛠️ Converting coverage format..."
+          echo "🔄 Organizing coverage files..."
           
-          COVERAGE_FILES=$(find . -name "coverage.cobertura.xml" -type f)
+          mkdir -p coverage
           
+          COVERAGE_FILES=$(find . -path "*/TestResults/*/coverage.cobertura.xml" -type f)
+          
+          if [ -z "$COVERAGE_FILES" ]; then
+            echo "⚠️  No coverage files found in TestResults!"
+            find . -name "*.xml" -type f | head -10
+            exit 1
+          fi
+          
+          counter=1
           for file in $COVERAGE_FILES; do
-            echo "📝 Converting: $file"
-            
-            if [ ! -s "$file" ]; then
-              echo "⚠️  File is empty, skipping: $file"
-              continue
-            fi
-            
-            temp_file="${file}.converted"
-            
-            sed 's/^<coverage\s*/<results /; s/^<\/coverage>/<\/results>/' "$file" > "$temp_file"
-            
-            if grep -q "<results" "$temp_file"; then
-              mv "$temp_file" "$file"
-              echo "✅ Successfully converted: $file"
+            if [ -s "$file" ]; then
+              new_name="coverage/coverage_${counter}.cobertura.xml"
+              cp "$file" "$new_name"
+              echo "✅ Copied: $file → $new_name"
+              counter=$((counter + 1))
             else
-              echo "❌ Failed to convert: $file"
-              rm -f "$temp_file"
+              echo "⚠️  Empty file skipped: $file"
             fi
           done
           
-          echo "🔍 Verifying conversion..."
-          for file in $COVERAGE_FILES; do
-            echo "--- $file (first 3 lines after conversion) ---"
-            head -3 "$file"
-            echo ""
-          done
+          echo "📊 Final coverage files:"
+          ls -la coverage/ || echo "No coverage directory created"
 
       - name: 🏁 End SonarCloud analysis
         env:
@@ -102,5 +97,6 @@ jobs:
         with:
           name: coverage-files
           path: |
-            **/*.cobertura.xml
+            **/TestResults/**
+            coverage/
           retention-days: 7
