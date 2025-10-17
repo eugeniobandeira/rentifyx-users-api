@@ -1,12 +1,10 @@
 ﻿name: Pipeline
-
 on:
   push:
     branches:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
   build-test-sonar:
     runs-on: ubuntu-latest
@@ -15,18 +13,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: ⚙️ Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
-
       - name: 📦 Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
-
       - name: 📦 Install dependencies
         run: dotnet restore
-
       - name: 🕵️‍♂️ Begin SonarCloud analysis 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -34,13 +28,11 @@ jobs:
           dotnet-sonarscanner begin \
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
-            /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.cobertura.xml" \
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
             /d:sonar.coverage.exclusions="**Tests*.cs,**/obj/**" \
             /d:sonar.verbose=true
-
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
-
       - name: ✅ Run Tests with Coverage (COVERLET MSBUILD)
         run: |
           echo "🧪 Running tests with coverlet.msbuild..."
@@ -50,57 +42,36 @@ jobs:
           dotnet test \
             /p:CollectCoverage=true \
             /p:CoverletOutput=./coverage/ \
-            /p:CoverletOutputFormat=cobertura \
+            /p:CoverletOutputFormat=opencover \
             /p:Include="[Rentifyx.Users.*]*" \
             --configuration Release \
             --no-build \
             --logger "trx;LogFileName=testresults.trx"
-
-      - name: 🛠️ CONVERT COVERAGE FORMAT
+      - name: 🔍 VERIFY COVERAGE FILES
         run: |
-          echo "🛠️ Converting coverage format..."
-          
-          COVERAGE_FILES=$(find . -name "coverage.cobertura.xml" -type f)
-          
+          echo "🔍 Verifying coverage files..."
+          COVERAGE_FILES=$(find . -name "coverage.opencover.xml" -type f)
+          if [ -z "$COVERAGE_FILES" ]; then
+            echo "❌ No coverage files found!"
+            exit 1
+          fi
           for file in $COVERAGE_FILES; do
-            echo "📝 Converting: $file"
-            
-            if [ ! -s "$file" ]; then
-              echo "⚠️  File is empty, skipping: $file"
-              continue
-            fi
-            
-            temp_file="${file}.converted"
-            
-            sed 's/^<coverage\s*/<results /; s/^<\/coverage>/<\/results>/' "$file" > "$temp_file"
-            
-            if grep -q "<results" "$temp_file"; then
-              mv "$temp_file" "$file"
-              echo "✅ Successfully converted: $file"
-            else
-              echo "❌ Failed to convert: $file"
-              rm -f "$temp_file"
-            fi
-          done
-          
-          echo "🔍 Verifying conversion..."
-          for file in $COVERAGE_FILES; do
-            echo "--- $file (first 3 lines after conversion) ---"
+            echo "📄 File: $file"
+            echo "📏 Size: $(wc -c < "$file") bytes"
+            echo "📝 First 3 lines:"
             head -3 "$file"
-            echo ""
+            echo "---"
           done
-
       - name: 🏁 End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           echo "🏁 Finalizing SonarCloud analysis..."
           dotnet-sonarscanner end
-
       - name: 📊 Upload Coverage Files for Debug
         uses: actions/upload-artifact@v4
         with:
           name: coverage-files
           path: |
-            **/*.cobertura.xml
+            **/*.opencover.xml
           retention-days: 7
