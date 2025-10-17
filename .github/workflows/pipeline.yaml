@@ -27,7 +27,7 @@ jobs:
       - name: 📦 Install dependencies
         run: dotnet restore
 
-      - name: 🕵️‍♂️ Begin SonarCloud analysis
+      - name: 🕵️‍♂️ Begin SonarCloud analysis 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -35,7 +35,7 @@ jobs:
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.vscoveragexml.reportsPaths="TestResults/**/coverage.cobertura.xml" \
+            /d:sonar.cs.vscoveragexml.reportsPaths="TestResults/coverage.cobertura.xml" \
             /d:sonar.verbose=true
 
       - name: 🛠 Build
@@ -47,6 +47,11 @@ jobs:
             --collect:"XPlat Code Coverage" \
             --results-directory TestResults/ \
             --settings coverlet.runsettings
+
+      - name: 🚚 Consolidate coverage reports to a single file
+        run: |
+          find TestResults -name "coverage.cobertura.xml" -exec cat {} + > TestResults/coverage.cobertura.xml.tmp
+          mv TestResults/coverage.cobertura.xml.tmp TestResults/coverage.cobertura.xml
 
       - name: 🏁 End SonarCloud analysis
         env:
