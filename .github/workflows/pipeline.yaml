@@ -74,6 +74,40 @@ jobs:
             echo ""
           done
 
+      - name: 🛠️ CONVERT COVERAGE FORMAT (SOLUÇÃO DEFINITIVA)
+        run: |
+          echo "🛠️ Converting coverage format from Cobertura to Visual Studio..."
+          
+          COVERAGE_FILES=$(find . -name "coverage.cobertura.xml" -type f)
+          
+          for file in $COVERAGE_FILES; do
+            echo "📝 Converting: $file"
+            
+            if [ ! -s "$file" ]; then
+              echo "⚠️  File is empty, skipping: $file"
+              continue
+            fi
+            
+            temp_file="${file}.converted"
+            
+            sed 's/^<coverage\s*/<results /; s/^<\/coverage>/<\/results>/' "$file" > "$temp_file"
+            
+            if grep -q "<results" "$temp_file"; then
+              mv "$temp_file" "$file"
+              echo "✅ Successfully converted: $file"
+            else
+              echo "❌ Failed to convert: $file"
+              rm -f "$temp_file"
+            fi
+          done
+          
+          echo "🔍 Verifying conversion..."
+          for file in $COVERAGE_FILES; do
+            echo "--- $file (first 3 lines after conversion) ---"
+            head -3 "$file"
+            echo ""
+          done
+
       - name: 🏁 End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
