@@ -19,7 +19,7 @@ jobs:
       - name: ⚙️ Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '9.0.x' 
 
       - name: 📦 Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
@@ -34,7 +34,6 @@ jobs:
           dotnet-sonarscanner begin \
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.cs.vscoveragexml.reportsPaths="TestResults/coverage.cobertura.xml" \
             /d:sonar.verbose=true
 
@@ -43,11 +42,14 @@ jobs:
 
       - name: ✅ Run Tests and Generate Single Coverage Report
         run: |
+          mkdir -p TestResults
+          
           dotnet test --no-build --configuration Release \
             /p:CollectCoverage=true \
             /p:CoverletOutputFormat=cobertura \
             /p:CoverletOutput=./TestResults/coverage.cobertura.xml \
-            /p:MergeWith='./TestResults/coverage.cobertura.xml'
+            /p:MergeWith=./TestResults/coverage.cobertura.xml \
+            /p:Threshold=0 
 
       - name: 🏁 End SonarCloud analysis
         env:
