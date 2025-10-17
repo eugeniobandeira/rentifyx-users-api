@@ -41,17 +41,13 @@ jobs:
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests with Coverage
+      - name: ✅ Run Tests and Generate Single Coverage Report
         run: |
           dotnet test --no-build --configuration Release \
-            --collect:"XPlat Code Coverage" \
-            --results-directory TestResults/ \
-            --settings coverlet.runsettings
-
-      - name: 🚚 Consolidate coverage reports to a single file
-        run: |
-          find TestResults -name "coverage.cobertura.xml" -exec cat {} + > TestResults/coverage.cobertura.xml.tmp
-          mv TestResults/coverage.cobertura.xml.tmp TestResults/coverage.cobertura.xml
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=cobertura \
+            /p:CoverletOutput=./TestResults/coverage.cobertura.xml \
+            /p:MergeWith='./TestResults/coverage.cobertura.xml'
 
       - name: 🏁 End SonarCloud analysis
         env:
