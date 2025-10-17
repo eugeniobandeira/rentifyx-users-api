@@ -41,7 +41,7 @@ jobs:
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: ✅ Run Tests with Coverage (MÉTODO SIMPLIFICADO)
+      - name: ✅ Run Tests with Coverage
         run: |
           echo "🧪 Running tests with coverage..."
           
@@ -56,34 +56,25 @@ jobs:
             --logger "trx;LogFileName=testresults.trx" \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
 
-      - name: 🔄 Renomear e Organizar Arquivos de Cobertura
+      - name: 🔄 Organizar Arquivos de Cobertura
         run: |
           echo "🔄 Organizing coverage files..."
           
           mkdir -p coverage
           
-          COVERAGE_FILES=$(find . -path "*/TestResults/*/coverage.cobertura.xml" -type f)
-          
-          if [ -z "$COVERAGE_FILES" ]; then
-            echo "⚠️  No coverage files found in TestResults!"
-            find . -name "*.xml" -type f | head -10
-            exit 1
-          fi
-          
-          counter=1
-          for file in $COVERAGE_FILES; do
+          find . -name "coverage.cobertura.xml" -type f | while read file; do
             if [ -s "$file" ]; then
-              new_name="coverage/coverage_${counter}.cobertura.xml"
+              base_name=$(basename "$(dirname "$(dirname "$file")")")
+              new_name="coverage/coverage_${base_name}.cobertura.xml"
               cp "$file" "$new_name"
               echo "✅ Copied: $file → $new_name"
-              counter=$((counter + 1))
             else
               echo "⚠️  Empty file skipped: $file"
             fi
           done
           
           echo "📊 Final coverage files:"
-          ls -la coverage/ || echo "No coverage directory created"
+          ls -la coverage/ 2>/dev/null || echo "No coverage files found"
 
       - name: 🏁 End SonarCloud analysis
         env:
@@ -93,6 +84,7 @@ jobs:
           dotnet-sonarscanner end
 
       - name: 📊 Upload Coverage Files for Debug
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-files
