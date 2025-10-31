@@ -8,7 +8,6 @@ using Microsoft.Extensions.ServiceDiscovery;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using Rentifyx.Clients.IoC;
 using Rentifyx.Users.IoC;
 
 namespace Rentityx.Users.ServiceDefaults;

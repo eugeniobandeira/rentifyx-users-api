@@ -6,15 +6,13 @@ namespace CommomTestUtilities.Repository;
 
 public static class UserAddOnlyRepositoryBuilder
 {
-    public static IAddOnlyRepository<UserEntity> Build()
+    public static IAddOnlyUserRepository<UserEntity> Build()
     {
-        var mock = new Mock<IAddOnlyRepository<UserEntity>>();
+        var mock = new Mock<IAddOnlyUserRepository<UserEntity>>();
 
         mock.Setup(repo => repo.AddAsync(
-                It.IsAny<UserEntity>(), 
-                It.IsAny<string>(), 
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+                It.IsAny<UserEntity>(),
+                It.IsAny<CancellationToken>()));
 
         return mock.Object;
     }

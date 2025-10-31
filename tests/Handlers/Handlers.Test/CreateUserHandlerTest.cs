@@ -45,7 +45,7 @@ public class CreateUserHandlerTest
     {
         var addOnlyRepository = UserAddOnlyRepositoryBuilder.Build();
         var validator = CreateUserValidatorBuilder.Build();
-        var logger  = LoggerBuilder<CreateUserHandler>.Build();
+        var logger = LoggerBuilder<CreateUserHandler>.Build();
         var configuration = ConfigurationBuilder.Build();
 
         return new CreateUserHandler(validator, addOnlyRepository, logger, configuration);

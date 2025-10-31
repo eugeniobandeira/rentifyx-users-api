@@ -7,6 +7,6 @@ namespace Rentifyx.Users.Application.Features.Users.Handler.Create;
 public interface ICreateUserHandler
 {
     Task<ErrorOr<UserEntity>> CreateUsersAsync(
-        CreateUserRequestDto request, 
+        CreateUserRequestDto request,
         CancellationToken cancellationToken = default);
 }

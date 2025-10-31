@@ -11,18 +11,18 @@ namespace Rentifyx.Users.Application.Features.Users.Handler.Create;
 
 public sealed class CreateUserHandler(
     IValidator<CreateUserRequestDto> validator,
-    IAddOnlyRepository<UserEntity> addOnlyRepository,
+    IAddOnlyUserRepository<UserEntity> addOnlyRepository,
     ILogger<CreateUserHandler> logger,
-    IConfiguration configuration) 
+    IConfiguration configuration)
     : ICreateUserHandler
 {
-    private readonly IAddOnlyRepository<UserEntity> _addOnlyRepository = addOnlyRepository;
+    private readonly IAddOnlyUserRepository<UserEntity> _addOnlyRepository = addOnlyRepository;
     private readonly IValidator<CreateUserRequestDto> _validator = validator;
     private readonly ILogger<CreateUserHandler> _logger = logger;
     private readonly IConfiguration _configuration = configuration;
 
     public async Task<ErrorOr<UserEntity>> CreateUsersAsync(
-        CreateUserRequestDto request, 
+        CreateUserRequestDto request,
         CancellationToken cancellationToken = default)
     {
         var tableName = _configuration["AWS:Tables:Users"];
@@ -47,10 +47,10 @@ public sealed class CreateUserHandler(
             _logger.LogError("Client creation failed due to validation errors: {Errors}", errors);
 
             return errors;
-        }   
+        }
         var user = UserAdapter.FromRequestToEntity(request);
 
-        await _addOnlyRepository.AddAsync(user, tableName, cancellationToken);
+        await _addOnlyRepository.AddAsync(user, cancellationToken);
 
         return user;
     }

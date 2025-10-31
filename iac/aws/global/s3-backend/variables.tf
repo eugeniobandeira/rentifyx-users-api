@@ -10,12 +10,6 @@ variable "service_name" {
   default     = "users"
 }
 
-variable "environment" {
-  description = "The environment"
-  type        = string
-  default     = "dev"
-}
-
 variable "dynamodb_lock_table_name" {
   description = "DynamoDB lock table name"
   type        = string
