@@ -13,19 +13,4 @@
     <PackageReference Include="AWSSDK.DynamoDBv2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="MessageResource\AwsResourceMessage.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AwsResourceMessage.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="MessageResource\AwsResourceMessage.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>AwsResourceMessage.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
 </Project>
