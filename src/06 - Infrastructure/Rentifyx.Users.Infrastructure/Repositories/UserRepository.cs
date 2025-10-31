@@ -9,7 +9,7 @@ namespace Rentifyx.Users.Infrastructure.Repositories;
 
 public sealed class UserRepository(
     IDynamoDBContext dynamoDBContext)
-    : IAddOnlyRepository<UserEntity>
+    : IAddOnlyUserRepository<UserEntity>
 {
     private readonly IDynamoDBContext _dynamoDBContext = dynamoDBContext;
 

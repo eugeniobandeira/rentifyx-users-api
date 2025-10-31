@@ -11,12 +11,12 @@ namespace Rentifyx.Users.Application.Features.Users.Handler.Create;
 
 public sealed class CreateUserHandler(
     IValidator<CreateUserRequestDto> validator,
-    IAddOnlyRepository<UserEntity> addOnlyRepository,
+    IAddOnlyUserRepository<UserEntity> addOnlyRepository,
     ILogger<CreateUserHandler> logger,
     IConfiguration configuration)
     : ICreateUserHandler
 {
-    private readonly IAddOnlyRepository<UserEntity> _addOnlyRepository = addOnlyRepository;
+    private readonly IAddOnlyUserRepository<UserEntity> _addOnlyRepository = addOnlyRepository;
     private readonly IValidator<CreateUserRequestDto> _validator = validator;
     private readonly ILogger<CreateUserHandler> _logger = logger;
     private readonly IConfiguration _configuration = configuration;
