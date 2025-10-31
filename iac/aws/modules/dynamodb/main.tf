@@ -1,7 +1,7 @@
 module "dynamodb_table" {
   source   = "terraform-aws-modules/dynamodb-table/aws"
 
-  name     = "${var.dynamodb_users_table_name}-${var.environment}"
+  name     = "${var.dynamodb_users_table_name}"
   hash_key = "Document"
   billing_mode = "PAY_PER_REQUEST"
 
@@ -14,6 +14,5 @@ module "dynamodb_table" {
 
   tags = {
     Terraform   = "true"
-    Environment = "dev"
   }
 }

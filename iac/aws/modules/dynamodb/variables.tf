@@ -3,9 +3,3 @@ variable "dynamodb_users_table_name" {
   type        = string
   default     = "rentifyx-users"
 }
-
-variable "environment" {
-  description = "The environment"
-  type        = string
-  default     = "dev"
-}
