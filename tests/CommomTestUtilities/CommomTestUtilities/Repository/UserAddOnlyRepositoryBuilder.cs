@@ -11,10 +11,8 @@ public static class UserAddOnlyRepositoryBuilder
         var mock = new Mock<IAddOnlyRepository<UserEntity>>();
 
         mock.Setup(repo => repo.AddAsync(
-                It.IsAny<UserEntity>(), 
-                It.IsAny<string>(), 
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+                It.IsAny<UserEntity>(),
+                It.IsAny<CancellationToken>()));
 
         return mock.Object;
     }
