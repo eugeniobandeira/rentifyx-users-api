@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.project_name}-${var.service_name}-tf-state-${var.environment}"
+  bucket = "${var.project_name}-${var.service_name}-tf-state"
 
   lifecycle {
     prevent_destroy = true
@@ -27,7 +27,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" 
 }
 
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name         = "${var.project_name}-${var.service_name}-${var.dynamodb_lock_table_name}-${var.environment}"
+  name         = "${var.project_name}-${var.service_name}-${var.dynamodb_lock_table_name}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
@@ -37,7 +37,9 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
   }
 
   tags = {
-    Name = "Terraform State Locking"
+    Name      = "Terraform State Locking"
+    IAC       = "true"
+    Terraform = "true"
   }
 }
 
@@ -45,5 +47,4 @@ module "users_dynamodb" {
   source = "../../modules/dynamodb"
 
   dynamodb_users_table_name = var.dynamodb_users_table_name
-  environment               = var.environment
 }
