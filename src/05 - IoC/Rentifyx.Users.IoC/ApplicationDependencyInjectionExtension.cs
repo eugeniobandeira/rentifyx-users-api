@@ -4,9 +4,11 @@ using Rentifyx.Users.Application.Features.Users.Handler;
 using Rentifyx.Users.Application.Features.Users.Handler.Create;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Request;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Validator;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rentifyx.Users.IoC;
 
+[ExcludeFromCodeCoverage]
 public static class ApplicationDependencyInjectionExtension
 {
     public static void AddApplicationDependencies(this IServiceCollection services)

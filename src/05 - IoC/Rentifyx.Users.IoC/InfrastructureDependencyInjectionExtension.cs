@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Rentifyx.Users.Domain.Entities;
 using Rentifyx.Users.Domain.Interfaces.User;
 using Rentifyx.Users.Infrastructure.Repositories;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rentifyx.Users.IoC;
 
+[ExcludeFromCodeCoverage]
 public static class InfrastructureDependencyInjectionExtension
 {
     public static void AddInfrastructureDependencies(this IServiceCollection services)
@@ -24,6 +26,6 @@ public static class InfrastructureDependencyInjectionExtension
         {
             Region = RegionEndpoint.SAEast1 
         });
-        services.AddScoped<IAddOnlyRepository<UserEntity>, UserRepository>();
+        services.AddScoped<IAddOnlyUserRepository<UserEntity>, UserRepository>();
     }   
 }
