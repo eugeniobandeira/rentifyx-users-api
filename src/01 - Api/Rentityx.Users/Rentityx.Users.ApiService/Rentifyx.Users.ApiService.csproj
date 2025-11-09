@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rentityx.Users.ServiceDefaults\Rentityx.Users.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Rentityx.Users.ServiceDefaults\Rentifyx.Users.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

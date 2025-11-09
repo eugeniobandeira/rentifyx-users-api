@@ -27,5 +27,6 @@ public static class InfrastructureDependencyInjectionExtension
             Region = RegionEndpoint.SAEast1 
         });
         services.AddScoped<IAddOnlyUserRepository<UserEntity>, UserRepository>();
+        services.AddScoped<IReadOnlyUserRepository, UserRepository>();
     }   
 }

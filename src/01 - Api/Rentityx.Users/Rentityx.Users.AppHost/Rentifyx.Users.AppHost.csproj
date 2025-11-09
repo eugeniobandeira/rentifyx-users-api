@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Rentityx.Users.ApiService\Rentityx.Users.ApiService.csproj" />
+    <ProjectReference Include="..\Rentityx.Users.ApiService\Rentifyx.Users.ApiService.csproj" />
   </ItemGroup>
 
 </Project>

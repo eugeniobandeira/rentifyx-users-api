@@ -1,5 +1,5 @@
+using Rentifyx.Users.ServiceDefaults;
 using Rentityx.Users.ApiService.Extensions;
-using Rentityx.Users.ServiceDefaults;
 using Scalar.AspNetCore;
 using System.Reflection;
 

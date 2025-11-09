@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using Rentifyx.Users.Domain.Constants;
+using Rentifyx.Users.Domain.ValueObjects;
 
 namespace Rentifyx.Users.Domain.Entities;
 
@@ -9,4 +10,5 @@ public sealed class UserEntity
     [DynamoDBHashKey]  public string Document { get; set; } = string.Empty;
     [DynamoDBProperty] public string Name { get; set; } = string.Empty;
     [DynamoDBProperty] public string Email { get; set; } = string.Empty;
+    [DynamoDBProperty] public ProfileImage? ProfileImage { get; set; }
 }

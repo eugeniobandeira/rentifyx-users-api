@@ -10,7 +10,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Rentifyx.Users.IoC;
 
-namespace Rentityx.Users.ServiceDefaults;
+namespace Rentifyx.Users.ServiceDefaults;
 
 public static class ExtensionsServiceDefaults
 {
