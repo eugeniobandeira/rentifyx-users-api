@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using Rentityx.Users.ApiService.Abstract;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace Rentityx.Users.ApiService.Extensions;
+namespace Rentifyx.Users.ApiService.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class EndpointExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)

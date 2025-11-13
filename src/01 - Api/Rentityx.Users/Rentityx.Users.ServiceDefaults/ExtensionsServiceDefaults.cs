@@ -9,9 +9,11 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Rentifyx.Users.IoC;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Rentifyx.Users.ServiceDefaults;
 
+[ExcludeFromCodeCoverage]
 public static class ExtensionsServiceDefaults
 {
     private const string HealthEndpointPath = "/health";
