@@ -18,11 +18,9 @@ public class CustomWebApplicationFactory(string dynamoDbServiceUrl)
     {
         builder.ConfigureServices(services =>
         {
-            // Remove the existing DynamoDB registrations
             services.RemoveAll<IAmazonDynamoDB>();
             services.RemoveAll<IDynamoDBContext>();
 
-            // Register test DynamoDB client pointing to Testcontainer
             var dynamoDbConfig = new AmazonDynamoDBConfig
             {
                 ServiceURL = _dynamoDbServiceUrl
@@ -45,11 +43,9 @@ public class CustomWebApplicationFactory(string dynamoDbServiceUrl)
 
         try
         {
-            // Check if table exists
             var tables = await dynamoDbClient.ListTablesAsync();
             if (!tables.TableNames.Contains(AwsContants.RENTIFYX_TABLE_NAME))
             {
-                // Create the table
                 var createTableRequest = new CreateTableRequest
                 {
                     TableName = AwsContants.RENTIFYX_TABLE_NAME,
@@ -74,13 +70,21 @@ public class CustomWebApplicationFactory(string dynamoDbServiceUrl)
 
                 await dynamoDbClient.CreateTableAsync(createTableRequest);
 
-                // Wait for table to be active
                 var tableStatus = string.Empty;
+                var attempts = 0;
+                const int maxAttempts = 60;
+
                 do
                 {
+                    if (attempts >= maxAttempts)
+                    {
+                        throw new TimeoutException($"Table creation timed out after {maxAttempts * 500}ms");
+                    }
+
                     await Task.Delay(500);
                     var describeTableResponse = await dynamoDbClient.DescribeTableAsync(AwsContants.RENTIFYX_TABLE_NAME);
                     tableStatus = describeTableResponse.Table.TableStatus;
+                    attempts++;
                 } while (tableStatus != "ACTIVE");
             }
         }
@@ -97,28 +101,34 @@ public class CustomWebApplicationFactory(string dynamoDbServiceUrl)
 
         try
         {
-            // Scan all items
-            var scanRequest = new ScanRequest
-            {
-                TableName = AwsContants.RENTIFYX_TABLE_NAME
-            };
+            Dictionary<string, AttributeValue>? lastEvaluatedKey = null;
 
-            var scanResponse = await dynamoDbClient.ScanAsync(scanRequest);
-
-            // Delete all items
-            foreach (var item in scanResponse.Items)
+            do
             {
-                var deleteRequest = new DeleteItemRequest
+                var scanRequest = new ScanRequest
                 {
                     TableName = AwsContants.RENTIFYX_TABLE_NAME,
-                    Key = new Dictionary<string, AttributeValue>
-                    {
-                        { "Document", item["Document"] }
-                    }
+                    ExclusiveStartKey = lastEvaluatedKey
                 };
 
-                await dynamoDbClient.DeleteItemAsync(deleteRequest);
-            }
+                var scanResponse = await dynamoDbClient.ScanAsync(scanRequest);
+
+                foreach (var item in scanResponse.Items)
+                {
+                    var deleteRequest = new DeleteItemRequest
+                    {
+                        TableName = AwsContants.RENTIFYX_TABLE_NAME,
+                        Key = new Dictionary<string, AttributeValue>
+                        {
+                            { "Document", item["Document"] }
+                        }
+                    };
+
+                    await dynamoDbClient.DeleteItemAsync(deleteRequest);
+                }
+
+                lastEvaluatedKey = scanResponse.LastEvaluatedKey;
+            } while (lastEvaluatedKey is { Count: > 0 });
         }
         catch (Exception ex)
         {

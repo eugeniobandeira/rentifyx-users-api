@@ -5,73 +5,113 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
 jobs:
   build-test-sonar:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+      pull-requests: read
+
     steps:
       - name: 🔄 Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: 🐳 Verify Docker availability
+        run: |
+          docker --version
+          docker ps
+          echo "✅ Docker is available for Testcontainers"
+
       - name: ⚙️ Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-      - name: 📦 Install SonarScanner for .NET
-        run: dotnet tool install --global dotnet-sonarscanner
-      - name: 📦 Install dependencies
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+
+      - name: 📦 Restore dependencies
         run: dotnet restore
-      - name: 🕵️‍♂️ Begin SonarCloud analysis 
+
+      - name: 🔧 Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+      - name: 🕵️‍♂️ Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet-sonarscanner begin \
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            /d:sonar.coverage.exclusions="**Tests*.cs,**/obj/**" \
+            /d:sonar.coverage.exclusions="**/*Tests.cs,**/*Test.cs,**/obj/**,**/bin/**" \
             /d:sonar.verbose=true
+
       - name: 🛠 Build
         run: dotnet build --no-restore --configuration Release
-      - name: ✅ Run Tests with Coverage (COVERLET MSBUILD)
+
+      - name: 🧪 Run tests with coverage
+        env:
+          DOTNET_ENVIRONMENT: Development
+          TESTCONTAINERS_RYUK_DISABLED: false
+          TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX: ""
         run: |
-          echo "🧪 Running tests with coverlet.msbuild..."
-          rm -rf TestResults
-          rm -rf coverage
-          
+          echo "🧪 Running integration and unit tests..."
+          rm -rf TestResults coverage
+
           dotnet test \
             /p:CollectCoverage=true \
             /p:CoverletOutput=./coverage/ \
             /p:CoverletOutputFormat=opencover \
             /p:Include="[Rentifyx.Users.*]*" \
+            /p:Exclude="[*.Tests]*,[*Test]*" \
             --configuration Release \
             --no-build \
-            --logger "trx;LogFileName=testresults.trx"
-      - name: 🔍 VERIFY COVERAGE FILES
+            --logger "trx;LogFileName=testresults.trx" \
+            --verbosity normal
+
+      - name: 🔍 Verify coverage files
         run: |
           echo "🔍 Verifying coverage files..."
           COVERAGE_FILES=$(find . -name "coverage.opencover.xml" -type f)
+
           if [ -z "$COVERAGE_FILES" ]; then
             echo "❌ No coverage files found!"
             exit 1
           fi
+
           for file in $COVERAGE_FILES; do
-            echo "📄 File: $file"
+            echo "📄 Coverage file: $file"
             echo "📏 Size: $(wc -c < "$file") bytes"
-            echo "📝 First 3 lines:"
-            head -3 "$file"
-            echo "---"
+
+            if [ $(wc -c < "$file") -lt 100 ]; then
+              echo "⚠️ Warning: Coverage file seems too small"
+            fi
           done
+
+          echo "✅ Coverage files verified successfully"
+
       - name: 🏁 End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          echo "🏁 Finalizing SonarCloud analysis..."
-          dotnet-sonarscanner end
-      - name: 📊 Upload Coverage Files for Debug
+        run: dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      - name: 📊 Upload coverage artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-files
           path: |
             **/*.opencover.xml
+            **/testresults.trx
           retention-days: 7

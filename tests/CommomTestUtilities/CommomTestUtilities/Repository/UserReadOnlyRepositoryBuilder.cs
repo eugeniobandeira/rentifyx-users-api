@@ -13,7 +13,7 @@ public static class UserReadOnlyRepositoryBuilder
         mock.Setup(repo => repo.GetByDocumentAsync(
                 It.IsAny<string>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserEntity?)null);
+            .ReturnsAsync(default(UserEntity));
 
         return mock.Object;
     }
