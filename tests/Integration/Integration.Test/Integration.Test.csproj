@@ -2,16 +2,25 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CA2234;CA1051;CA1054;CA1001;CS8602;CS8604</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" />
     <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Testcontainers" />
     <PackageReference Include="Testcontainers.DynamoDb" />
     <PackageReference Include="Testcontainers.LocalStack" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\01 - Api\Rentityx.Users\Rentityx.Users.ApiService\Rentifyx.Users.ApiService.csproj" />
+    <ProjectReference Include="..\..\CommomTestUtilities\CommomTestUtilities\CommomTestUtilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
