@@ -1,6 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.Model;
 using ErrorOr;
 using Microsoft.Extensions.Logging;
 using Rentifyx.Users.Domain.Entities;
@@ -18,7 +17,7 @@ public sealed class UserRepository(
     private readonly ILogger<UserRepository> _logger = logger;
 
     public async Task<ErrorOr<UserEntity>> AddAsync(
-        UserEntity entity, 
+        UserEntity entity,
         CancellationToken cancellationToken = default)
     {
         try
@@ -41,7 +40,7 @@ public sealed class UserRepository(
 
 
     public async Task<ErrorOr<UserEntity>> GetByDocumentAsync(
-        string document, 
+        string document,
         CancellationToken cancellationToken)
     {
         try

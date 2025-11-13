@@ -1,6 +1,5 @@
 ﻿using ErrorOr;
 using FluentValidation;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Rentifyx.Users.Application.Adapter;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Request;
@@ -12,12 +11,10 @@ namespace Rentifyx.Users.Application.Features.Users.Handler.Create;
 public sealed class CreateUserHandler(
     IValidator<CreateUserRequestDto> validator,
     IAddOnlyUserRepository<UserEntity> addOnlyRepository,
-    IReadOnlyUserRepository readOnlyUserRepository,
     ILogger<CreateUserHandler> logger)
     : ICreateUserHandler
 {
     private readonly IAddOnlyUserRepository<UserEntity> _addOnlyRepository = addOnlyRepository;
-    private readonly IReadOnlyUserRepository _readOnlyUserRepository = readOnlyUserRepository;
     private readonly IValidator<CreateUserRequestDto> _validator = validator;
     private readonly ILogger<CreateUserHandler> _logger = logger;
 
@@ -42,7 +39,18 @@ public sealed class CreateUserHandler(
             return errors;
         }
 
-        var user = UserAdapter.FromRequestToEntity(request);
+        UserEntity user;
+        try
+        {
+            user = UserAdapter.FromRequestToEntity(request);
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex, "Failed to create user entity due to domain validation error");
+            return Error.Validation(
+                code: "Address",
+                description: ex.Message);
+        }
 
         await _addOnlyRepository.AddAsync(user, cancellationToken);
 

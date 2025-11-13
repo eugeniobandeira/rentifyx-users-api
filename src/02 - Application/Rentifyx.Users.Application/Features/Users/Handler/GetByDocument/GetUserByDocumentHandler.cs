@@ -4,7 +4,7 @@ using Rentifyx.Users.Domain.Interfaces.User;
 
 namespace Rentifyx.Users.Application.Features.Users.Handler.GetByDocument;
 
-public class GetUserByDocumentHandler(IReadOnlyUserRepository readOnlyUserRepository) 
+public class GetUserByDocumentHandler(IReadOnlyUserRepository readOnlyUserRepository)
     : IGetUserByDocumentHandler
 {
     private readonly IReadOnlyUserRepository _readOnlyUserRepository = readOnlyUserRepository;
@@ -13,7 +13,7 @@ public class GetUserByDocumentHandler(IReadOnlyUserRepository readOnlyUserReposi
     private const int _maxDocumentLength = 14;
 
     public async Task<ErrorOr<UserEntity>> GetUserByDocumentAsync(
-        string document, 
+        string document,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(document))
@@ -24,7 +24,7 @@ public class GetUserByDocumentHandler(IReadOnlyUserRepository readOnlyUserReposi
         }
 
         if (document.Length is not (_minDocumentLength or _maxDocumentLength))
-            {
+        {
             return Error.Validation(
                 code: "User.Document.InvalidFormat",
                 description: "The document must have 11 or 14 characters.");
