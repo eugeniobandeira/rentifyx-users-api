@@ -149,4 +149,55 @@
     <value>Document must be 11 or 14 digits.</value>
     <comment>O documento precisa ter o tamanho de 11 ou 14 digitos.</comment>
   </data>
+  <data name="EMPTY_STREET" xml:space="preserve">
+    <value>Street is required.</value>
+    <comment>A rua é obrigatória.</comment>
+  </data>
+  <data name="EMPTY_NUMBER" xml:space="preserve">
+    <value>Number is required.</value>
+    <comment>O número é obrigatório.</comment>
+  </data>
+  <data name="EMPTY_NEIGHBORHOOD" xml:space="preserve">
+    <value>Neighborhood is required.</value>
+    <comment>O bairro é obrigatório.</comment>
+  </data>
+  <data name="EMPTY_CITY" xml:space="preserve">
+    <value>City is required.</value>
+  </data>
+  <data name="EMPTY_STATE" xml:space="preserve">
+    <value>State is required.</value>
+    <comment>O estado é obrigatório.</comment>
+  </data>
+  <data name="EMPTY_ZIPCODE" xml:space="preserve">
+    <value>ZipCode is required.</value>
+    <comment>O CEP é obrigatório.</comment>
+  </data>
+  <data name="STREET_MAX_LENGTH" xml:space="preserve">
+    <value>Street must be at most 200 characters long.</value>
+    <comment>A rua deve ter no máximo 200 caracteres.</comment>
+  </data>
+  <data name="NUMBER_MAX_LENGTH" xml:space="preserve">
+    <value>Number must be at most 10 characters long.</value>
+    <comment>O número deve ter no máximo 10 caracteres.</comment>
+  </data>
+  <data name="NEIGHBORHOOD_MAX_LENGTH" xml:space="preserve">
+    <value>Neighborhood must be at most 100 characters long.</value>
+    <comment>O bairro deve ter no máximo 100 caracteres.</comment>
+  </data>
+  <data name="CITY_MAX_LENGTH" xml:space="preserve">
+    <value>City must be at most 100 characters long.</value>
+    <comment>A cidade deve ter no máximo 100 caracteres.</comment>
+  </data>
+  <data name="STATE_LENGTH" xml:space="preserve">
+    <value>State must be 2 characters (UF).</value>
+    <comment>O estado deve ter 2 caracteres (UF).</comment>
+  </data>
+  <data name="ZIPCODE_LENGTH" xml:space="preserve">
+    <value>ZipCode must be 8 digits.</value>
+    <comment>O CEP deve ter 8 dígitos.</comment>
+  </data>
+  <data name="COMPLEMENT_MAX_LENGTH" xml:space="preserve">
+    <value>Complement must be at most 200 characters long.</value>
+    <comment>O complemento deve ter no máximo 200 caracteres.</comment>
+  </data>
 </root>

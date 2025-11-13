@@ -19,19 +19,19 @@ public class ErrorOnValidationException : UsersException
         _errors = new ReadOnlyCollection<string>(Array.Empty<string>());
     }
 
-    public ErrorOnValidationException(string message) 
+    public ErrorOnValidationException(string message)
         : base(message)
     {
         _errors = new ReadOnlyCollection<string>(Array.Empty<string>());
     }
 
-    public ErrorOnValidationException(string message, Exception innerException) 
+    public ErrorOnValidationException(string message, Exception innerException)
         : base(message, innerException)
     {
         _errors = new ReadOnlyCollection<string>(Array.Empty<string>());
     }
 
-    public override int StatusCode 
+    public override int StatusCode
         => (int)HttpStatusCode.BadRequest;
 
     public override ReadOnlyCollection<string> GetErrors()
