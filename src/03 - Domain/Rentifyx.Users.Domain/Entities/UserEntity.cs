@@ -10,5 +10,6 @@ public sealed class UserEntity
     [DynamoDBHashKey]  public string Document { get; set; } = string.Empty;
     [DynamoDBProperty] public string Name { get; set; } = string.Empty;
     [DynamoDBProperty] public string Email { get; set; } = string.Empty;
+    [DynamoDBProperty] public Address Address { get; set; } = null!;
     [DynamoDBProperty] public ProfileImage? ProfileImage { get; set; }
 }

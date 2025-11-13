@@ -5,19 +5,22 @@ namespace Rentifyx.Users.Domain.ValueObjects;
 
 public sealed class ProfileImage
 {
-    [DynamoDBProperty] public string Year { get; private set; } = string.Empty;
-    [DynamoDBProperty] public string Month { get; private set; } = string.Empty;
-    [DynamoDBProperty] public string Day { get; private set; } = string.Empty;
-    [DynamoDBProperty] public string Key { get; private set; } = string.Empty;
-    [DynamoDBProperty] public string BucketPath { get; private set; } = string.Empty;
-    [DynamoDBProperty] public DateTime UploadedAt { get; private set; } = DateTime.UtcNow;
+    [DynamoDBProperty] public string Year { get; set; } = string.Empty;
+    [DynamoDBProperty] public string Month { get; set; } = string.Empty;
+    [DynamoDBProperty] public string Day { get; set; } = string.Empty;
+    [DynamoDBProperty] public string Key { get; set; } = string.Empty;
+    [DynamoDBProperty] public string BucketPath { get; set; } = string.Empty;
+    [DynamoDBProperty] public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
     public string FullPath => $"year={Year}/month={Month}/day={Day}/key={Key}";
 
-    private ProfileImage() { }
+    public ProfileImage() { }
 
     public static ProfileImage Create(string fileName, string bucketName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(bucketName);
+
         var now = DateTime.UtcNow;
         var extension = Path.GetExtension(fileName);
         var generatedKey = $"{Guid.NewGuid()}{extension}";
