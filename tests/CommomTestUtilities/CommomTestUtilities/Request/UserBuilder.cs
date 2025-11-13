@@ -1,6 +1,8 @@
 ﻿using Bogus;
 using Bogus.Extensions.Brazil;
 using Rentifyx.Users.Domain.Entities;
+
+using Rentifyx.Users.Domain.ValueObjects;
 using System.Security.Cryptography;
 
 namespace CommomTestUtilities.Request;
@@ -9,7 +11,7 @@ public static class UserBuilder
 {
     public static UserEntity Build()
     {
-        return new Faker<UserEntity>("pt_BR")
+        var faker = new Faker<UserEntity>("pt_BR")
             .RuleFor(c => c.Document, f =>
             {
                 var randomNumber = RandomNumberGenerator.GetInt32(0, 2);
@@ -24,6 +26,21 @@ public static class UserBuilder
             })
             .RuleFor(c => c.Name, f => f.Name.FullName())
             .RuleFor(c => c.Email, f => f.Internet.Email())
-            .Generate();
+            .RuleFor(c => c.Address, f =>
+            {
+
+                return Address.Builder()
+                    .WithStreet(f.Address.StreetName())
+                    .WithNumber(("10"))
+                    .WithNeighborhood(f.Address.County())
+                    .WithCity(f.Address.City())
+                    .WithState(f.Address.StateAbbr())
+                    .WithZipCode(f.Address.ZipCode().Replace("-", "", StringComparison.Ordinal))
+                    .WithComplement(f.Random.Bool() ? f.Address.SecondaryAddress() : null)
+                    .Build();
+            })
+            .RuleFor(c => c.ProfileImage, f => ProfileImage.Create("profile.jpg", "rentifyx-bucket"));
+
+        return faker.Generate();
     }
 }

@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
-using Moq;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Request;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Validator;
 
