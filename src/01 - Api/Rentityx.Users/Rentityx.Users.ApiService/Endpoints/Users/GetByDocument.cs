@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Rentifyx.Users.Application.Features.Users.Handler.Create;
-using Rentifyx.Users.Application.Features.Users.Handler.Create.Request;
+using Rentifyx.Users.ApiService.Extensions;
 using Rentifyx.Users.Application.Features.Users.Handler.GetByDocument;
 using Rentityx.Users.ApiService.Abstract;
 using Rentityx.Users.ApiService.Endpoints;
-using Rentityx.Users.ApiService.Extensions;
 
 namespace Rentifyx.Users.ApiService.Endpoints.Users;
 

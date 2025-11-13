@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics;
 
-namespace Rentityx.Users.AppHost;
+namespace Rentifyx.Users.AppHost;
 
 internal static class ResourceBuilderExtensions
 {
@@ -15,7 +15,7 @@ internal static class ResourceBuilderExtensions
         return builder.WithCommand(
             name,
             displayName,
-            executeCommand: _ => 
+            executeCommand: _ =>
             {
                 try
                 {

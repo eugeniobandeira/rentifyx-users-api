@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using System.Net;
 
-namespace Rentityx.Users.ApiService.Extensions;
+namespace Rentifyx.Users.ApiService.Extensions;
 
 public static class ErrorOrExtensions
 {
@@ -29,7 +29,7 @@ public static class ErrorOrExtensions
     {
         var errorsDict = errors
             .GroupBy(error => error.Code)
-            .ToDictionary(group => 
+            .ToDictionary(group =>
                 group.Key, g => g.Select(e => e.Description).ToArray());
 
         return Results.ValidationProblem(

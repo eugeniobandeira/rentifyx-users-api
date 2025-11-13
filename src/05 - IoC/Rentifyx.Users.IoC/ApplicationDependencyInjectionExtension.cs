@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Rentifyx.Users.Application.Features.Users.Handler;
 using Rentifyx.Users.Application.Features.Users.Handler.Create;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Request;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Validator;

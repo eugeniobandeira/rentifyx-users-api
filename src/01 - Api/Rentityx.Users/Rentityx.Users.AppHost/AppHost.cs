@@ -1,4 +1,4 @@
-using Rentityx.Users.AppHost;
+using Rentifyx.Users.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 

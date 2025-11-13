@@ -42,11 +42,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handlers.Test", "tests\Handlers\Handlers.Test\Handlers.Test.csproj", "{AD0B5F3C-6B8C-460F-6A5D-929777EEA60A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentityx.Users.ApiService", "src\01 - Api\Rentityx.Users\Rentityx.Users.ApiService\Rentityx.Users.ApiService.csproj", "{22034D69-FEFC-4A21-1895-7E0A4DC959B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Users.ApiService", "src\01 - Api\Rentityx.Users\Rentityx.Users.ApiService\Rentifyx.Users.ApiService.csproj", "{22034D69-FEFC-4A21-1895-7E0A4DC959B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentityx.Users.AppHost", "src\01 - Api\Rentityx.Users\Rentityx.Users.AppHost\Rentityx.Users.AppHost.csproj", "{5894DFEC-EF61-2480-9DAA-21D1A8B78C71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Users.AppHost", "src\01 - Api\Rentityx.Users\Rentityx.Users.AppHost\Rentifyx.Users.AppHost.csproj", "{5894DFEC-EF61-2480-9DAA-21D1A8B78C71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentityx.Users.ServiceDefaults", "src\01 - Api\Rentityx.Users\Rentityx.Users.ServiceDefaults\Rentityx.Users.ServiceDefaults.csproj", "{8DCF8FE3-CDA6-A804-E9B9-51B9C3B35FE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Users.ServiceDefaults", "src\01 - Api\Rentityx.Users\Rentityx.Users.ServiceDefaults\Rentifyx.Users.ServiceDefaults.csproj", "{8DCF8FE3-CDA6-A804-E9B9-51B9C3B35FE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentifyx.Users.Application", "src\02 - Application\Rentifyx.Users.Application\Rentifyx.Users.Application.csproj", "{9316BD32-A26D-CC36-9E4B-83FE24D5BA39}"
 EndProject

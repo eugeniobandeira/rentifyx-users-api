@@ -1,10 +1,8 @@
-﻿using ErrorOr;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Rentifyx.Users.ApiService.Extensions;
 using Rentifyx.Users.Application.Features.Users.Handler.Create;
 using Rentifyx.Users.Application.Features.Users.Handler.Create.Request;
 using Rentityx.Users.ApiService.Abstract;
-using Rentityx.Users.ApiService.Extensions;
-using System.Reflection.Metadata;
 
 namespace Rentityx.Users.ApiService.Endpoints.Users;
 

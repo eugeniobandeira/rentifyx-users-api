@@ -17,7 +17,7 @@ public static class ExtensionsServiceDefaults
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";
 
-    public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder 
+    public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder
         : IHostApplicationBuilder
     {
         builder.ConfigureOpenTelemetry();
@@ -44,7 +44,7 @@ public static class ExtensionsServiceDefaults
         return builder;
     }
 
-    public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder) 
+    public static TBuilder ConfigureOpenTelemetry<TBuilder>(this TBuilder builder)
         where TBuilder : IHostApplicationBuilder
     {
         builder.Logging.AddOpenTelemetry(logging =>
@@ -66,7 +66,7 @@ public static class ExtensionsServiceDefaults
                 tracing.AddSource(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation(tracing =>
                         tracing.Filter = context =>
-                            !context.Request.Path.StartsWithSegments(HealthEndpointPath, StringComparison.CurrentCultureIgnoreCase)  && 
+                            !context.Request.Path.StartsWithSegments(HealthEndpointPath, StringComparison.CurrentCultureIgnoreCase) &&
                             !context.Request.Path.StartsWithSegments(AlivenessEndpointPath, StringComparison.CurrentCultureIgnoreCase)
                     )
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
@@ -79,8 +79,8 @@ public static class ExtensionsServiceDefaults
         return builder;
     }
 
-    private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder) 
-        where TBuilder 
+    private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder)
+        where TBuilder
         : IHostApplicationBuilder
     {
         var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
@@ -93,7 +93,7 @@ public static class ExtensionsServiceDefaults
         return builder;
     }
 
-    public static TBuilder AddDefaultHealthChecks<TBuilder>(this TBuilder builder) where TBuilder 
+    public static TBuilder AddDefaultHealthChecks<TBuilder>(this TBuilder builder) where TBuilder
         : IHostApplicationBuilder
     {
         builder.Services.AddHealthChecks()
