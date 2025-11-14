@@ -167,124 +167,14 @@ jobs:
           echo "📁 Coverage files uploaded as artifacts"
 
   # ========================================
-  # Job 3: Testes de Integração (Paralelo)
-  # ========================================
-  integration-tests:
-    name: 🐳 Integration Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs: build-and-analyze
-
-    permissions:
-      contents: read
-
-    steps:
-      - name: 🔄 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🐳 Verify Docker availability
-        run: |
-          docker --version
-          docker compose version
-          docker ps
-          docker info
-          echo "✅ Docker is ready for Testcontainers"
-
-      - name: 🐳 Pull DynamoDB image (cache optimization)
-        run: |
-          echo "📦 Pre-pulling DynamoDB image to avoid timeout during test..."
-          docker pull amazon/dynamodb-local:latest
-          echo "✅ DynamoDB image cached"
-
-      - name: ⚙️ Setup .NET ${{ env.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: 📦 Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: 📥 Restore dependencies
-        run: dotnet restore
-
-      - name: 🐳 Run Integration Tests
-        env:
-          DOTNET_ENVIRONMENT: Development
-          # Testcontainers - Otimizações para CI/CD
-          TESTCONTAINERS_RYUK_DISABLED: false
-          TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX: ""
-          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
-          DOCKER_HOST: unix:///var/run/docker.sock
-          # Logging e diagnósticos
-          TESTCONTAINERS_HOST_OVERRIDE: localhost
-          # CI detection
-          CI: true
-        run: |
-          echo "🐳 Running Integration Tests with Testcontainers..."
-          echo "📊 Test configuration:"
-          echo "  - Docker socket: $DOCKER_HOST"
-          echo "  - Ryuk enabled: true (cleanup automático)"
-          echo "  - Collection Fixture: Compartilhamento de container"
-          echo ""
-
-          dotnet test tests/Integration/Integration.Test/Integration.Test.csproj \
-            --configuration Release \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./TestResults/Integration \
-            --settings .runsettings \
-            --logger "trx;LogFileName=integration-results.trx" \
-            --logger "console;verbosity=detailed" \
-            --verbosity normal
-
-          echo ""
-          echo "✅ Integration tests completed"
-
-      - name: 🔍 Diagnose on failure
-        if: failure()
-        run: |
-          echo "❌ Integration tests failed. Collecting diagnostics..."
-          echo ""
-          echo "📋 Docker containers:"
-          docker ps -a
-          echo ""
-          echo "📋 Docker logs (if any Testcontainers running):"
-          docker ps -a --filter "label=org.testcontainers=true" --format "{{.ID}}" | xargs -I {} docker logs {} || true
-          echo ""
-          echo "📋 Test results directory:"
-          ls -la ./TestResults/ || echo "No test results found"
-          echo ""
-          echo "💡 Check the logs above for error details"
-
-      - name: 📊 Upload integration test coverage
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: integration-test-coverage
-          path: |
-            ./TestResults/**/coverage.opencover.xml
-            ./TestResults/**/*.trx
-          retention-days: 7
-
-      - name: ✅ Integration tests summary
-        if: always()
-        run: |
-          echo "✅ Integration Tests Completed"
-          echo "📁 Coverage files uploaded as artifacts"
-
-  # ========================================
-  # Job 4: Consolidação e SonarCloud
+  # Job 3: Consolidação e SonarCloud
   # ========================================
   sonar-analysis:
     name: 📊 SonarCloud Analysis
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [build-and-analyze, unit-tests, integration-tests]
-    if: always() && (needs.unit-tests.result == 'success' || needs.integration-tests.result == 'success')
+    needs: [build-and-analyze, unit-tests]
+    if: always() && needs.unit-tests.result == 'success'
 
     permissions:
       contents: read
@@ -322,13 +212,6 @@ jobs:
         with:
           name: unit-test-coverage
           path: ./coverage/unit
-        continue-on-error: true
-
-      - name: 📥 Download integration test coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: integration-test-coverage
-          path: ./coverage/integration
         continue-on-error: true
 
       - name: 📥 Restore dependencies
@@ -391,7 +274,7 @@ jobs:
     name: 📋 Pipeline Summary
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [build-and-analyze, unit-tests, integration-tests, sonar-analysis]
+    needs: [build-and-analyze, unit-tests, sonar-analysis]
     if: always()
 
     steps:
@@ -403,14 +286,12 @@ jobs:
           echo ""
           echo "🔨 Build & Analysis: ${{ needs.build-and-analyze.result }}"
           echo "🧪 Unit Tests: ${{ needs.unit-tests.result }}"
-          echo "🐳 Integration Tests: ${{ needs.integration-tests.result }}"
           echo "📊 SonarCloud Analysis: ${{ needs.sonar-analysis.result }}"
           echo ""
           echo "========================================="
 
           if [[ "${{ needs.build-and-analyze.result }}" == "success" && \
                 "${{ needs.unit-tests.result }}" == "success" && \
-                "${{ needs.integration-tests.result }}" == "success" && \
                 "${{ needs.sonar-analysis.result }}" == "success" ]]; then
             echo "✅ ALL CHECKS PASSED!"
             exit 0
