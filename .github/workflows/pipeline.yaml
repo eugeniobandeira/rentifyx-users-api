@@ -187,7 +187,14 @@ jobs:
           docker --version
           docker compose version
           docker ps
+          docker info
           echo "✅ Docker is ready for Testcontainers"
+
+      - name: 🐳 Pull DynamoDB image (cache optimization)
+        run: |
+          echo "📦 Pre-pulling DynamoDB image to avoid timeout during test..."
+          docker pull amazon/dynamodb-local:latest
+          echo "✅ DynamoDB image cached"
 
       - name: ⚙️ Setup .NET ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
@@ -208,20 +215,54 @@ jobs:
       - name: 🐳 Run Integration Tests
         env:
           DOTNET_ENVIRONMENT: Development
+          # Testcontainers - Otimizações para CI/CD
           TESTCONTAINERS_RYUK_DISABLED: false
           TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX: ""
+          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
+          DOCKER_HOST: unix:///var/run/docker.sock
+          # Logging e diagnósticos
+          TESTCONTAINERS_HOST_OVERRIDE: localhost
+          # CI detection
+          CI: true
         run: |
           echo "🐳 Running Integration Tests with Testcontainers..."
+          echo "📊 Test configuration:"
+          echo "  - Docker socket: $DOCKER_HOST"
+          echo "  - Ryuk enabled: true (cleanup automático)"
+          echo "  - Collection Fixture: Compartilhamento de container"
+          echo ""
+
           dotnet test tests/Integration/Integration.Test/Integration.Test.csproj \
             --configuration Release \
             --collect:"XPlat Code Coverage" \
             --results-directory ./TestResults/Integration \
             --settings .runsettings \
             --logger "trx;LogFileName=integration-results.trx" \
+            --logger "console;verbosity=detailed" \
             --verbosity normal
+
+          echo ""
+          echo "✅ Integration tests completed"
+
+      - name: 🔍 Diagnose on failure
+        if: failure()
+        run: |
+          echo "❌ Integration tests failed. Collecting diagnostics..."
+          echo ""
+          echo "📋 Docker containers:"
+          docker ps -a
+          echo ""
+          echo "📋 Docker logs (if any Testcontainers running):"
+          docker ps -a --filter "label=org.testcontainers=true" --format "{{.ID}}" | xargs -I {} docker logs {} || true
+          echo ""
+          echo "📋 Test results directory:"
+          ls -la ./TestResults/ || echo "No test results found"
+          echo ""
+          echo "💡 Check the logs above for error details"
 
       - name: 📊 Upload integration test coverage
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: integration-test-coverage
           path: |

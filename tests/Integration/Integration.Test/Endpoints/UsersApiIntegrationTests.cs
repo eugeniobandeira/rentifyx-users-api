@@ -8,12 +8,21 @@ using Rentifyx.Users.Domain.Entities;
 
 namespace Integration.Test.Endpoints;
 
+/// <summary>
+/// Testes de integração para a API de usuários.
+/// Usa collection compartilhada para otimizar performance no CI/CD.
+/// </summary>
+[Collection("Integration Tests")]
 public class UsersApiIntegrationTests : IntegrationTestBase
 {
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
+
+    public UsersApiIntegrationTests(IntegrationTestFixture fixture) : base(fixture)
+    {
+    }
 
     [Fact]
     public async Task CreateUser_WithValidData_ShouldReturnCreatedAndPersistInDatabase()
