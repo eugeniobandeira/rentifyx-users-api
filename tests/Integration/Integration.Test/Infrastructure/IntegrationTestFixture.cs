@@ -3,9 +3,9 @@ using Testcontainers.DynamoDb;
 namespace Integration.Test.Infrastructure;
 
 /// <summary>
-/// Collection Fixture compartilhado entre todos os testes de integração.
-/// O container DynamoDB é criado UMA VEZ e reutilizado por todos os testes.
-/// Isso reduz drasticamente o tempo de execução no CI/CD.
+/// Shared Collection Fixture for all integration tests.
+/// DynamoDB container is created ONCE and reused by all tests.
+/// This dramatically reduces execution time in CI/CD.
 /// </summary>
 public class IntegrationTestFixture : IAsyncLifetime
 {
@@ -82,14 +82,14 @@ public class IntegrationTestFixture : IAsyncLifetime
                 Console.WriteLine("✅ [Fixture] DynamoDB container stopped");
             }
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
             Console.WriteLine($"⚠️ [Fixture] Error during cleanup: {ex.Message}");
         }
     }
 
     /// <summary>
-    /// Limpa dados do banco entre testes para garantir isolamento
+    /// Cleans database data between tests to ensure isolation
     /// </summary>
     public async Task CleanupDatabaseAsync()
     {

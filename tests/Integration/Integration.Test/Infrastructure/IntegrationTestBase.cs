@@ -1,9 +1,9 @@
 namespace Integration.Test.Infrastructure;
 
 /// <summary>
-/// Classe base para testes de integração.
-/// Usa a fixture compartilhada para reutilizar o container DynamoDB.
-/// Cada teste recebe um HttpClient limpo e o banco é limpo após cada teste.
+/// Base class for integration tests.
+/// Uses shared fixture to reuse DynamoDB container.
+/// Each test receives a clean HttpClient and database is cleaned after each test.
 /// </summary>
 public abstract class IntegrationTestBase : IAsyncLifetime
 {
@@ -16,8 +16,8 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     }
 
     /// <summary>
-    /// Executado antes de cada teste individual.
-    /// Cria um novo HttpClient para isolamento.
+    /// Executed before each individual test.
+    /// Creates a new HttpClient for isolation.
     /// </summary>
     public Task InitializeAsync()
     {
@@ -35,9 +35,9 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     }
 
     /// <summary>
-    /// Executado após cada teste individual.
-    /// Limpa os dados do banco para garantir isolamento entre testes.
-    /// O container NÃO é destruído (é reutilizado).
+    /// Executed after each individual test.
+    /// Cleans database data to ensure isolation between tests.
+    /// Container is NOT destroyed (it is reused).
     /// </summary>
     public async Task DisposeAsync()
     {
@@ -45,13 +45,18 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         {
             HttpClient?.Dispose();
 
-            // Limpa apenas os dados, mantém o container rodando
             await _fixture.CleanupDatabaseAsync();
             Console.WriteLine("🧹 [Test] Database cleaned after test");
         }
-        catch (Exception ex)
+        catch (ObjectDisposedException ex)
         {
-            Console.WriteLine($"⚠️ [Test] Error during test cleanup: {ex.Message}");
+            Console.WriteLine($"⚠️ [Test] Object disposed during test cleanup: {ex.Message}");
+            throw;
+        }
+        catch (InvalidOperationException ex)
+        {
+            Console.WriteLine($"⚠️ [Test] Invalid operation during test cleanup: {ex.Message}");
+            throw;
         }
     }
 }

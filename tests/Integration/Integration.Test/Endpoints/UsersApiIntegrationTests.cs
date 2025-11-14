@@ -9,8 +9,8 @@ using Rentifyx.Users.Domain.Entities;
 namespace Integration.Test.Endpoints;
 
 /// <summary>
-/// Testes de integração para a API de usuários.
-/// Usa collection compartilhada para otimizar performance no CI/CD.
+/// Integration tests for the Users API.
+/// Uses shared collection to optimize performance in CI/CD.
 /// </summary>
 [Collection("Integration Tests")]
 public class UsersApiIntegrationTests : IntegrationTestBase
