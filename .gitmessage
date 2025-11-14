@@ -1,0 +1,67 @@
+# <type>(<scope>): <subject>
+# |<----  Preferably using up to 50 chars  --->|
+
+
+# [optional body]
+# |<----   Try to limit each line to 72 chars   ---->|
+
+
+# [optional footer(s)]
+# Example: Refs: #123, Fixes: #456
+
+
+# === Conventional Commit Types ===
+# feat:     New feature (MINOR version bump)
+# fix:      Bug fix (PATCH version bump)
+# docs:     Documentation only changes
+# style:    Code style (formatting, missing semicolons, etc)
+# refactor: Code restructuring without behavior change
+# perf:     Performance improvement
+# test:     Adding or updating tests
+# build:    Build system or dependency changes
+# ci:       CI/CD configuration changes
+# chore:    Maintenance tasks (git, config, etc)
+# revert:   Revert previous commit
+
+# === Project Scopes (Clean Architecture) ===
+# api            - API layer (controllers, endpoints)
+# application    - Application layer (handlers, services)
+# domain         - Domain layer (entities, value objects)
+# infrastructure - Infrastructure layer (repositories, DynamoDB)
+# exceptions     - Custom exceptions
+# ioc            - Dependency injection configuration
+# tests          - Test projects (validators, handlers, integration)
+
+# === Infrastructure Scopes ===
+# db      - Database (DynamoDB, migrations)
+# aws     - AWS infrastructure (ECS, ECR, Secrets Manager)
+# docker  - Docker configuration
+# ci      - GitHub Actions workflows
+
+# === General Scopes ===
+# deps     - Dependencies (NuGet packages)
+# config   - Configuration files
+# security - Security-related changes
+# docs     - Documentation
+
+# === Breaking Changes ===
+# Add ! after type/scope: feat(api)!: change response format
+# Or add footer: BREAKING CHANGE: description
+
+# === Examples ===
+# feat(api): add user registration endpoint
+# fix(auth): resolve JWT token expiration issue
+# refactor(domain): extract email validation to value object
+# perf(infrastructure): optimize DynamoDB query with index
+# test(integration): add user creation happy path test
+# docs(readme): update Docker setup instructions
+# build(deps): update FluentValidation to 11.9.0
+# ci(actions): add parallel test execution
+# chore(git): update .gitignore for .NET
+
+# === Footer Examples ===
+# Refs: #123
+# Fixes: #456
+# Closes: #789
+# BREAKING CHANGE: User API response format changed
+# Co-authored-by: Name <email@example.com>

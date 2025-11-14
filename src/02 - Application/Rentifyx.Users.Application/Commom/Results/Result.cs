@@ -3,7 +3,7 @@
 public class Result<T>
 {
     public bool IsSuccess { get; }
-    public bool IsFailure  => !IsSuccess;
+    public bool IsFailure => !IsSuccess;
     public T? Value { get; }
     public string? Error { get; }
     public IReadOnlyList<string>? Errors { get; }
@@ -15,20 +15,20 @@ public class Result<T>
         Error = error;
         Errors = errors;
     }
-    
+
     public static Result<T> Success(T value)
     {
         return new Result<T>(
-            isSuccess: true, 
-            value: value, 
+            isSuccess: true,
+            value: value,
             error: null);
     }
 
     public static Result<T> Failure(string error)
     {
         return new Result<T>(
-            isSuccess: false, 
-            value: default, 
+            isSuccess: false,
+            value: default,
             error: error);
     }
 
@@ -37,9 +37,9 @@ public class Result<T>
         var errorMessage = string.Join(", ", errors);
 
         return new Result<T>(
-            isSuccess: false, 
-            value: default, 
-            error: errorMessage, 
+            isSuccess: false,
+            value: default,
+            error: errorMessage,
             errors: errors);
     }
 }

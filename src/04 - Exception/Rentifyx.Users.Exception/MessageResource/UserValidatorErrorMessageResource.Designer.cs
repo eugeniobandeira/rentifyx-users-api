@@ -61,11 +61,38 @@ namespace Rentifyx.Users.Exceptions.MessageResource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to City must be at most 100 characters long..
+        /// </summary>
+        public static string CITY_MAX_LENGTH {
+            get {
+                return ResourceManager.GetString("CITY_MAX_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complement must be at most 200 characters long..
+        /// </summary>
+        public static string COMPLEMENT_MAX_LENGTH {
+            get {
+                return ResourceManager.GetString("COMPLEMENT_MAX_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Document must be 11 or 14 digits..
         /// </summary>
         public static string DOCUMENT_LENGTH {
             get {
                 return ResourceManager.GetString("DOCUMENT_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to City is required..
+        /// </summary>
+        public static string EMPTY_CITY {
+            get {
+                return ResourceManager.GetString("EMPTY_CITY", resourceCulture);
             }
         }
         
@@ -93,6 +120,51 @@ namespace Rentifyx.Users.Exceptions.MessageResource {
         public static string EMPTY_NAME {
             get {
                 return ResourceManager.GetString("EMPTY_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neighborhood is required..
+        /// </summary>
+        public static string EMPTY_NEIGHBORHOOD {
+            get {
+                return ResourceManager.GetString("EMPTY_NEIGHBORHOOD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number is required..
+        /// </summary>
+        public static string EMPTY_NUMBER {
+            get {
+                return ResourceManager.GetString("EMPTY_NUMBER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State is required..
+        /// </summary>
+        public static string EMPTY_STATE {
+            get {
+                return ResourceManager.GetString("EMPTY_STATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Street is required..
+        /// </summary>
+        public static string EMPTY_STREET {
+            get {
+                return ResourceManager.GetString("EMPTY_STREET", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ZipCode is required..
+        /// </summary>
+        public static string EMPTY_ZIPCODE {
+            get {
+                return ResourceManager.GetString("EMPTY_ZIPCODE", resourceCulture);
             }
         }
         
@@ -129,6 +201,51 @@ namespace Rentifyx.Users.Exceptions.MessageResource {
         public static string NAME_MIN_LENGTH {
             get {
                 return ResourceManager.GetString("NAME_MIN_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neighborhood must be at most 100 characters long..
+        /// </summary>
+        public static string NEIGHBORHOOD_MAX_LENGTH {
+            get {
+                return ResourceManager.GetString("NEIGHBORHOOD_MAX_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number must be at most 10 characters long..
+        /// </summary>
+        public static string NUMBER_MAX_LENGTH {
+            get {
+                return ResourceManager.GetString("NUMBER_MAX_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State must be 2 characters (UF)..
+        /// </summary>
+        public static string STATE_LENGTH {
+            get {
+                return ResourceManager.GetString("STATE_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Street must be at most 200 characters long..
+        /// </summary>
+        public static string STREET_MAX_LENGTH {
+            get {
+                return ResourceManager.GetString("STREET_MAX_LENGTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ZipCode must be 8 digits..
+        /// </summary>
+        public static string ZIPCODE_LENGTH {
+            get {
+                return ResourceManager.GetString("ZIPCODE_LENGTH", resourceCulture);
             }
         }
     }

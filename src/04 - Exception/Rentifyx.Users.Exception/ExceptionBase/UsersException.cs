@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using System;
 
 namespace Rentifyx.Users.Exceptions.ExceptionBase;
 

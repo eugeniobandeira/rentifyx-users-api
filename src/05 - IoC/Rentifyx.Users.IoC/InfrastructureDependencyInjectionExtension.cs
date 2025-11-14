@@ -24,8 +24,9 @@ public static class InfrastructureDependencyInjectionExtension
         services.AddScoped<IDynamoDBContext, DynamoDBContext>();
         services.AddDefaultAWSOptions(new AWSOptions
         {
-            Region = RegionEndpoint.SAEast1 
+            Region = RegionEndpoint.SAEast1
         });
         services.AddScoped<IAddOnlyUserRepository<UserEntity>, UserRepository>();
-    }   
+        services.AddScoped<IReadOnlyUserRepository, UserRepository>();
+    }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Rentityx.Users.AppHost;
+namespace Rentifyx.Users.AppHost;
 
+[ExcludeFromCodeCoverage]
 internal static class ResourceBuilderExtensions
 {
     private static IResourceBuilder<T> WithOpenApiDocs<T>(
@@ -15,7 +17,7 @@ internal static class ResourceBuilderExtensions
         return builder.WithCommand(
             name,
             displayName,
-            executeCommand: _ => 
+            executeCommand: _ =>
             {
                 try
                 {

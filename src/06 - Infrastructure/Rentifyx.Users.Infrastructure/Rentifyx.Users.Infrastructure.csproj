@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" />
+    <PackageReference Include="ErrorOr" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
   </ItemGroup>
 
   <ItemGroup>

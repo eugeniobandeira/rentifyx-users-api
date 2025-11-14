@@ -1,8 +1,8 @@
-using Rentityx.Users.AppHost;
+using Rentifyx.Users.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.Rentityx_Users_ApiService>("apiservice")
+builder.AddProject<Projects.Rentifyx_Users_ApiService>("apiservice")
     .WithHttpHealthCheck("/health")
     .WithSwaggerUi()
     .WithScalar()

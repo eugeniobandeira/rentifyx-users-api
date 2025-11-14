@@ -1,6 +1,7 @@
-using Rentityx.Users.ApiService.Extensions;
-using Rentityx.Users.ServiceDefaults;
+using Rentifyx.Users.ApiService.Extensions;
+using Rentifyx.Users.ServiceDefaults;
 using Scalar.AspNetCore;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,3 +42,11 @@ app.MapDefaultEndpoints();
 app.MapEndpoints();
 
 await app.RunAsync();
+
+
+/// <summary>
+/// Provides the entry point for the application.
+/// </summary>
+/// <remarks>It is necessary to create integration tests</remarks>
+[ExcludeFromCodeCoverage]
+public partial class Program { }    

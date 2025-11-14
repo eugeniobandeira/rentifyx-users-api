@@ -2,15 +2,20 @@
 
   <PropertyGroup>
     <RootNamespace>Rentifyx.Users.Domain</RootNamespace>
+    <NoWarn>$(NoWarn);CA1034</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Enums\" />
-    <Folder Include="ValueObjects\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" />
+    <PackageReference Include="ErrorOr" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\04 - Exception\Rentifyx.Users.Exception\Rentifyx.Users.Exceptions.csproj" />
   </ItemGroup>
 
 </Project>
