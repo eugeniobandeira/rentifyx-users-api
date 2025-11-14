@@ -1,6 +1,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +22,18 @@ public class CustomWebApplicationFactory(string dynamoDbServiceUrl)
             services.RemoveAll<IAmazonDynamoDB>();
             services.RemoveAll<IDynamoDBContext>();
 
+            // Use fake credentials for DynamoDB local (Testcontainers)
+            // These credentials are never validated by DynamoDB local
+            var fakeCredentials = new BasicAWSCredentials("FAKE_ACCESS_KEY", "FAKE_SECRET_KEY");
+
             var dynamoDbConfig = new AmazonDynamoDBConfig
             {
-                ServiceURL = _dynamoDbServiceUrl
+                ServiceURL = _dynamoDbServiceUrl,
+                // Disable authentication signature for local DynamoDB
+                AuthenticationRegion = "us-east-1"
             };
 
-            var dynamoDbClient = new AmazonDynamoDBClient(dynamoDbConfig);
+            var dynamoDbClient = new AmazonDynamoDBClient(fakeCredentials, dynamoDbConfig);
 
             services.AddSingleton<IAmazonDynamoDB>(dynamoDbClient);
             services.AddScoped<IDynamoDBContext>(sp =>

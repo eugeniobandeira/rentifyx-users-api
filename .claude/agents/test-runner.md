@@ -233,6 +233,25 @@ Solutions:
 - Pre-pull image: docker pull amazon/dynamodb-local:latest
 ```
 
+**Error: "Unable to find credentials" or "The AWS Access Key Id you provided does not exist"**
+```
+Problem:
+- AWS SDK is trying to find real credentials even for DynamoDB local
+- Common in CI/CD environments (GitHub Actions, etc.)
+
+Solution (Already Implemented):
+CustomWebApplicationFactory uses fake credentials:
+
+var fakeCredentials = new BasicAWSCredentials("FAKE_ACCESS_KEY", "FAKE_SECRET_KEY");
+var dynamoDbClient = new AmazonDynamoDBClient(fakeCredentials, dynamoDbConfig);
+
+DynamoDB local does NOT validate credentials, so fake ones work perfectly.
+
+If you see this error, verify:
+1. CustomWebApplicationFactory.cs line ~27 has fake credentials
+2. No code is creating AmazonDynamoDBClient without credentials
+```
+
 **Error: "Table creation timed out after 30000ms"**
 ```
 Solution:
@@ -398,9 +417,17 @@ jobs:
         dotnet test tests/Handlers/Handlers.Test/
 
     - name: Run Integration Tests (with Docker)
+      env:
+        # Optional: These are NOT needed because we use fake credentials
+        # AWS_ACCESS_KEY_ID: fake
+        # AWS_SECRET_ACCESS_KEY: fake
+        CI: true
       run: dotnet test tests/Integration/Integration.Test/
       # Testcontainers automatically uses Docker daemon
+      # CustomWebApplicationFactory provides fake AWS credentials
 ```
+
+**Important**: Our integration tests use **fake AWS credentials** (`BasicAWSCredentials`) in `CustomWebApplicationFactory.cs`, so you **DO NOT** need to configure real AWS credentials in CI/CD. DynamoDB local accepts any credentials.
 
 ### Local Development
 
