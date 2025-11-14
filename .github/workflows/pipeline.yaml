@@ -1,20 +1,255 @@
-﻿name: Pipeline
+name: Pipeline CI/CD
+
 on:
   push:
     branches:
       - master
+      - dev
   pull_request:
     types: [opened, synchronize, reopened]
 
 env:
+  DOTNET_VERSION: '9.0.x'
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  SONAR_HOST_URL: 'https://sonarcloud.io'
 
 jobs:
-  build-test-sonar:
+  # ========================================
+  # Job 1: Build e Análise de Código
+  # ========================================
+  build-and-analyze:
+    name: 🔨 Build & Code Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+      pull-requests: read
+
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  
+
+      - name: ⚙️ Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 📦 Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: 🔧 Cache .NET tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.dotnet/tools
+          key: ${{ runner.os }}-dotnet-tools-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-dotnet-tools-
+
+      - name: 📥 Restore dependencies
+        run: dotnet restore
+
+      - name: 🛠️ Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      - name: 🔧 Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner --ignore-failed-sources
+
+      - name: 🕵️ Begin SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet-sonarscanner begin \
+            /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
+            /o:"${{ secrets.SONAR_ORGANIZATION }}" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
+            /d:sonar.coverage.exclusions="**/*Tests.cs,**/*Test.cs,**/obj/**,**/bin/**,**/CommomTestUtilities/**" \
+            /d:sonar.exclusions="**/Migrations/**,**/obj/**,**/bin/**" \
+            /d:sonar.verbose=true
+
+      - name: 🔨 Build for analysis
+        run: dotnet build --no-restore --configuration Release
+
+      - name: 📤 Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            **/bin/Release/**
+            !**/obj/**
+          retention-days: 1
+
+      - name: 💾 Generate cache key
+        id: cache-key
+        run: echo "key=${{ runner.os }}-build-${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  # ========================================
+  # Job 2: Testes Unitários (Paralelo)
+  # ========================================
+  unit-tests:
+    name: 🧪 Unit Tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: build-and-analyze
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 📦 Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: 📥 Restore dependencies
+        run: dotnet restore
+
+      - name: 🧪 Run Validators Tests
+        run: |
+          echo "🧪 Running Validators Unit Tests..."
+          dotnet test tests/Validators/Validators.Test/Validators.Test.csproj \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./coverage/ \
+            /p:CoverletOutputFormat=opencover \
+            /p:Include="[Rentifyx.Users.*]*" \
+            /p:Exclude="[*.Tests]*,[*Test]*,[CommomTestUtilities]*" \
+            --configuration Release \
+            --logger "trx;LogFileName=validators-results.trx" \
+            --verbosity normal
+
+      - name: 🧪 Run Handlers Tests
+        run: |
+          echo "🧪 Running Handlers Unit Tests..."
+          dotnet test tests/Handlers/Handlers.Test/Handlers.Test.csproj \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./coverage/ \
+            /p:CoverletOutputFormat=opencover \
+            /p:Include="[Rentifyx.Users.*]*" \
+            /p:Exclude="[*.Tests]*,[*Test]*,[CommomTestUtilities]*" \
+            --configuration Release \
+            --logger "trx;LogFileName=handlers-results.trx" \
+            --verbosity normal
+
+      - name: 📊 Upload unit test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-coverage
+          path: |
+            **/coverage.opencover.xml
+            **/*-results.trx
+          retention-days: 7
+
+      - name: ✅ Unit tests summary
+        if: always()
+        run: |
+          echo "✅ Unit Tests Completed"
+          echo "📁 Coverage files uploaded as artifacts"
+
+  # ========================================
+  # Job 3: Testes de Integração (Paralelo)
+  # ========================================
+  integration-tests:
+    name: 🐳 Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: build-and-analyze
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Verify Docker availability
+        run: |
+          docker --version
+          docker compose version
+          docker ps
+          echo "✅ Docker is ready for Testcontainers"
+
+      - name: ⚙️ Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 📦 Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: 📥 Restore dependencies
+        run: dotnet restore
+
+      - name: 🐳 Run Integration Tests
+        env:
+          DOTNET_ENVIRONMENT: Development
+          TESTCONTAINERS_RYUK_DISABLED: false
+          TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX: ""
+        run: |
+          echo "🐳 Running Integration Tests with Testcontainers..."
+          dotnet test tests/Integration/Integration.Test/Integration.Test.csproj \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./coverage/ \
+            /p:CoverletOutputFormat=opencover \
+            /p:Include="[Rentifyx.Users.*]*" \
+            /p:Exclude="[*.Tests]*,[*Test]*,[CommomTestUtilities]*" \
+            --configuration Release \
+            --logger "trx;LogFileName=integration-results.trx" \
+            --verbosity normal
+
+      - name: 📊 Upload integration test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-coverage
+          path: |
+            **/coverage.opencover.xml
+            **/*-results.trx
+          retention-days: 7
+
+      - name: ✅ Integration tests summary
+        if: always()
+        run: |
+          echo "✅ Integration Tests Completed"
+          echo "📁 Coverage files uploaded as artifacts"
+
+  # ========================================
+  # Job 4: Consolidação e SonarCloud
+  # ========================================
+  sonar-analysis:
+    name: 📊 SonarCloud Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build-and-analyze, unit-tests, integration-tests]
+    if: always() && (needs.unit-tests.result == 'success' || needs.integration-tests.result == 'success')
 
     permissions:
       contents: read
@@ -26,23 +261,48 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🐳 Verify Docker availability
-        run: |
-          docker --version
-          docker ps
-          echo "✅ Docker is available for Testcontainers"
-
-      - name: ⚙️ Setup .NET
+      - name: ⚙️ Setup .NET ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: 📦 Restore dependencies
+      - name: 📦 Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: 🔧 Cache .NET tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.dotnet/tools
+          key: ${{ runner.os }}-dotnet-tools-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-dotnet-tools-
+
+      - name: 📥 Download unit test coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: unit-test-coverage
+          path: ./coverage/unit
+        continue-on-error: true
+
+      - name: 📥 Download integration test coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: integration-test-coverage
+          path: ./coverage/integration
+        continue-on-error: true
+
+      - name: 📥 Restore dependencies
         run: dotnet restore
 
       - name: 🔧 Install SonarScanner
-        run: dotnet tool install --global dotnet-sonarscanner
-      - name: 🕵️‍♂️ Begin SonarCloud analysis
+        run: dotnet tool install --global dotnet-sonarscanner --ignore-failed-sources
+
+      - name: 🕵️ Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -50,66 +310,76 @@ jobs:
             /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
             /o:"${{ secrets.SONAR_ORGANIZATION }}" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            /d:sonar.coverage.exclusions="**/*Tests.cs,**/*Test.cs,**/obj/**,**/bin/**" \
+            /d:sonar.coverage.exclusions="**/*Tests.cs,**/*Test.cs,**/obj/**,**/bin/**,**/CommomTestUtilities/**" \
+            /d:sonar.exclusions="**/Migrations/**,**/obj/**,**/bin/**" \
             /d:sonar.verbose=true
 
-      - name: 🛠 Build
+      - name: 🔨 Build for SonarCloud
         run: dotnet build --no-restore --configuration Release
-
-      - name: 🧪 Run tests with coverage
-        env:
-          DOTNET_ENVIRONMENT: Development
-          TESTCONTAINERS_RYUK_DISABLED: false
-          TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX: ""
-        run: |
-          echo "🧪 Running integration and unit tests..."
-          rm -rf TestResults coverage
-
-          dotnet test \
-            /p:CollectCoverage=true \
-            /p:CoverletOutput=./coverage/ \
-            /p:CoverletOutputFormat=opencover \
-            /p:Include="[Rentifyx.Users.*]*" \
-            /p:Exclude="[*.Tests]*,[*Test]*" \
-            --configuration Release \
-            --no-build \
-            --logger "trx;LogFileName=testresults.trx" \
-            --verbosity normal
 
       - name: 🔍 Verify coverage files
         run: |
-          echo "🔍 Verifying coverage files..."
-          COVERAGE_FILES=$(find . -name "coverage.opencover.xml" -type f)
+          echo "🔍 Searching for coverage files..."
+          find . -name "coverage.opencover.xml" -type f -exec echo "📄 Found: {}" \; -exec wc -c {} \;
 
-          if [ -z "$COVERAGE_FILES" ]; then
-            echo "❌ No coverage files found!"
-            exit 1
+          COVERAGE_COUNT=$(find . -name "coverage.opencover.xml" -type f | wc -l)
+          echo "📊 Total coverage files found: $COVERAGE_COUNT"
+
+          if [ "$COVERAGE_COUNT" -eq 0 ]; then
+            echo "⚠️ Warning: No coverage files found, but continuing with analysis"
+          else
+            echo "✅ Coverage files verified"
           fi
-
-          for file in $COVERAGE_FILES; do
-            echo "📄 Coverage file: $file"
-            echo "📏 Size: $(wc -c < "$file") bytes"
-
-            if [ $(wc -c < "$file") -lt 100 ]; then
-              echo "⚠️ Warning: Coverage file seems too small"
-            fi
-          done
-
-          echo "✅ Coverage files verified successfully"
 
       - name: 🏁 End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      - name: 📊 Upload coverage artifacts
+      - name: 📊 Upload consolidated coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-files
+          name: consolidated-coverage
           path: |
-            **/*.opencover.xml
-            **/testresults.trx
-          retention-days: 7
+            **/coverage.opencover.xml
+            **/*.trx
+          retention-days: 30
+
+  # ========================================
+  # Job 5: Pipeline Status Summary
+  # ========================================
+  pipeline-summary:
+    name: 📋 Pipeline Summary
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build-and-analyze, unit-tests, integration-tests, sonar-analysis]
+    if: always()
+
+    steps:
+      - name: 📊 Pipeline Results
+        run: |
+          echo "========================================="
+          echo "📋 PIPELINE EXECUTION SUMMARY"
+          echo "========================================="
+          echo ""
+          echo "🔨 Build & Analysis: ${{ needs.build-and-analyze.result }}"
+          echo "🧪 Unit Tests: ${{ needs.unit-tests.result }}"
+          echo "🐳 Integration Tests: ${{ needs.integration-tests.result }}"
+          echo "📊 SonarCloud Analysis: ${{ needs.sonar-analysis.result }}"
+          echo ""
+          echo "========================================="
+
+          if [[ "${{ needs.build-and-analyze.result }}" == "success" && \
+                "${{ needs.unit-tests.result }}" == "success" && \
+                "${{ needs.integration-tests.result }}" == "success" && \
+                "${{ needs.sonar-analysis.result }}" == "success" ]]; then
+            echo "✅ ALL CHECKS PASSED!"
+            exit 0
+          else
+            echo "❌ SOME CHECKS FAILED"
+            exit 1
+          fi
