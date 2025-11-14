@@ -133,12 +133,10 @@ jobs:
         run: |
           echo "🧪 Running Validators Unit Tests..."
           dotnet test tests/Validators/Validators.Test/Validators.Test.csproj \
-            /p:CollectCoverage=true \
-            /p:CoverletOutput=./coverage/ \
-            /p:CoverletOutputFormat=opencover \
-            /p:Include="[Rentifyx.Users.*]*" \
-            /p:Exclude="[*.Tests]*,[*Test]*,[CommomTestUtilities]*" \
             --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults/Validators \
+            --settings .runsettings \
             --logger "trx;LogFileName=validators-results.trx" \
             --verbosity normal
 
@@ -146,12 +144,10 @@ jobs:
         run: |
           echo "🧪 Running Handlers Unit Tests..."
           dotnet test tests/Handlers/Handlers.Test/Handlers.Test.csproj \
-            /p:CollectCoverage=true \
-            /p:CoverletOutput=./coverage/ \
-            /p:CoverletOutputFormat=opencover \
-            /p:Include="[Rentifyx.Users.*]*" \
-            /p:Exclude="[*.Tests]*,[*Test]*,[CommomTestUtilities]*" \
             --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults/Handlers \
+            --settings .runsettings \
             --logger "trx;LogFileName=handlers-results.trx" \
             --verbosity normal
 
@@ -160,8 +156,8 @@ jobs:
         with:
           name: unit-test-coverage
           path: |
-            **/coverage.opencover.xml
-            **/*-results.trx
+            ./TestResults/**/coverage.opencover.xml
+            ./TestResults/**/*.trx
           retention-days: 7
 
       - name: ✅ Unit tests summary
@@ -217,12 +213,10 @@ jobs:
         run: |
           echo "🐳 Running Integration Tests with Testcontainers..."
           dotnet test tests/Integration/Integration.Test/Integration.Test.csproj \
-            /p:CollectCoverage=true \
-            /p:CoverletOutput=./coverage/ \
-            /p:CoverletOutputFormat=opencover \
-            /p:Include="[Rentifyx.Users.*]*" \
-            /p:Exclude="[*.Tests]*,[*Test]*,[CommomTestUtilities]*" \
             --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults/Integration \
+            --settings .runsettings \
             --logger "trx;LogFileName=integration-results.trx" \
             --verbosity normal
 
@@ -231,8 +225,8 @@ jobs:
         with:
           name: integration-test-coverage
           path: |
-            **/coverage.opencover.xml
-            **/*-results.trx
+            ./TestResults/**/coverage.opencover.xml
+            ./TestResults/**/*.trx
           retention-days: 7
 
       - name: ✅ Integration tests summary
