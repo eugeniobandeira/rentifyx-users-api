@@ -81,7 +81,7 @@ public class IntegrationTestFixture : IAsyncLifetime
                 await _dynamoDbContainer.DisposeAsync();
                 Console.WriteLine("✅ [Fixture] DynamoDB container stopped");
             }
-        }
+        } 
         catch (InvalidOperationException ex)
         {
             Console.WriteLine($"⚠️ [Fixture] Error during cleanup: {ex.Message}");
